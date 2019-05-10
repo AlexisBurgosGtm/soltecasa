@@ -39,6 +39,44 @@ btnGuardarOrden.addEventListener('click', ()=>{
 
 
 socket.on('orden nueva', function(msg){
-    funciones.hablar(msg);
+    persistentNotification(msg);
+    //funciones.hablar(msg);
   //$('#messages').append($('<li>').text(msg));
 });
+
+
+
+
+
+if ('Notification' in window) {
+  //$status.innerText = Notification.permission;
+}
+
+function requestPermission() {
+  if (!('Notification' in window)) {
+    alert('Notification API not supported!');
+    return;
+  }
+  
+  Notification.requestPermission(function (result) {
+    //$status.innerText = result;
+  });
+}
+
+
+function persistentNotification(msn) {
+  if (!('Notification' in window) || !('ServiceWorkerRegistration' in window)) {
+    alert('Persistent Notification API not supported!');
+    return;
+  }
+  
+  try {
+    navigator.serviceWorker.getRegistration()
+      .then(reg => reg.showNotification(msn))
+      .catch(err => alert('Service Worker registration error: ' + err));
+  } catch (err) {
+    alert('Notification API error: ' + err);
+  }
+}
+
+requestPermission();
