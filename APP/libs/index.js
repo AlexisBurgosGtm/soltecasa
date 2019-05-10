@@ -40,7 +40,7 @@ btnGuardarOrden.addEventListener('click', ()=>{
 
 socket.on('orden nueva', function(msg){
     persistentNotification(msg);
-    //funciones.hablar(msg);
+    funciones.hablar(msg);
   //$('#messages').append($('<li>').text(msg));
 });
 
