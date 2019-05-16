@@ -2,7 +2,7 @@ var express = require("express");
 var app = express();
 var router = express.Router();
 var bodyParser = require('body-parser');
-var routerapi = require('./router/routerapi');
+var routercarwash = require('./router/routercarwash');
 
 const PORT = process.env.PORT || 666;
 
@@ -24,7 +24,7 @@ router.use(function (req,res,next) {
         // Set to true if you need the website to include cookies in the requests sent
       res.setHeader('Access-Control-Allow-Credentials', true);
 */
-  //console.log("/" + req.method);
+  console.log("/" + req.toString());
   next();
 });
 
@@ -35,12 +35,8 @@ app.get("/",function(req,res){
 	res.sendFile(path + 'index.html');
 }); 
 
-app.get("/inicio.html",function(req,res){
-	res.sendFile(path + 'inicio.html');
-}); 
-
-//Router de las solicitudes a Express-POS
-app.use('/api', routerapi);
+//Router para el carwash
+app.use('/carwash', routercarwash);
 
 app.use("/",router);
 
@@ -54,7 +50,6 @@ app.listen(PORT, function () {
 	console.log('Servidor iniciado en el puerto ' + String(PORT));
 });
 */
-
 
 io.on('connection', function(socket){
 	socket.on('orden nueva', function(msg,user){

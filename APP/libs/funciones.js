@@ -66,8 +66,7 @@ funciones = {
         return (((sign) ? '' : '-') + signo + ' ' + num + ((cents == "00") ? '' : '.' + cents));
     },
 
-    loadScript: function(url) {
-
+    loadScript: function(url, idContainer) {
         return new Promise((resolve, reject) => {
           var script = document.createElement('script');
           //script.async = true;
@@ -75,9 +74,8 @@ funciones = {
     
           script.onload = resolve;
           script.onerror = reject;
-    
-          //document.head.appendChild(script);
-          document.body.appendChild(script);
+             
+          document.getElementById(idContainer).appendChild(script)
         });
     },
 
@@ -89,10 +87,10 @@ funciones = {
             .catch();
     },
 
-    loadView: (url)=> {
+    loadView: (url, idContainer)=> {
         return new Promise((resolve, reject) => {
             
-            let contenedor = document.getElementById('contenedor');
+            let contenedor = document.getElementById(idContainer);
 
             var xhr = new XMLHttpRequest();
             xhr.open('GET', url);
@@ -119,33 +117,6 @@ funciones = {
           });
     },
    
-InitMap: function(){
-       
-    try {
-        navigator.geolocation.getCurrentPosition(function (location) {
-            var myLatlng = new google.maps.LatLng(location.coords.latitude.toString(), location.coords.longitude.toString());
-            var mapOptions = {
-                zoom: 13,
-                center: myLatlng,
-                scrollwheel: false, //we disable de scroll over the map, it is a really annoing when you scroll through page
-                styles: [{"featureType":"water","elementType":"geometry","stylers":[{"color":"#e9e9e9"},{"lightness":17}]},{"featureType":"landscape","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":20}]},{"featureType":"road.highway","elementType":"geometry.fill","stylers":[{"color":"#ffffff"},{"lightness":17}]},{"featureType":"road.highway","elementType":"geometry.stroke","stylers":[{"color":"#ffffff"},{"lightness":29},{"weight":0.2}]},{"featureType":"road.arterial","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":18}]},{"featureType":"road.local","elementType":"geometry","stylers":[{"color":"#ffffff"},{"lightness":16}]},{"featureType":"poi","elementType":"geometry","stylers":[{"color":"#f5f5f5"},{"lightness":21}]},{"featureType":"poi.park","elementType":"geometry","stylers":[{"color":"#dedede"},{"lightness":21}]},{"elementType":"labels.text.stroke","stylers":[{"visibility":"on"},{"color":"#ffffff"},{"lightness":16}]},{"elementType":"labels.text.fill","stylers":[{"saturation":36},{"color":"#333333"},{"lightness":40}]},{"elementType":"labels.icon","stylers":[{"visibility":"off"}]},{"featureType":"transit","elementType":"geometry","stylers":[{"color":"#f2f2f2"},{"lightness":19}]},{"featureType":"administrative","elementType":"geometry.fill","stylers":[{"color":"#fefefe"},{"lightness":20}]},{"featureType":"administrative","elementType":"geometry.stroke","stylers":[{"color":"#fefefe"},{"lightness":17},{"weight":1.2}]}]
-              };    
-            var map = new google.maps.Map(document.getElementById("map"), mapOptions);
-
-            var marker = new google.maps.Marker({
-                position: myLatlng,
-                title:"Mi posición"
-            });
-    
-            // To add the marker to the map, call setMap();
-            marker.setMap(map);
-        })
-    } catch (error) {
-        funciones.AvisoError(error.toString());
-    }
-
-},
-
 	showNotification: function(from, align,msn, tipo){
         let stcolor = '';
         switch (tipo) {
@@ -380,10 +351,21 @@ InitMap: function(){
       )
   },
 
-  ApiUpdate: async function(empnit){
-   //let apiAll = await fetch('/api/update/all')
-     // .then(console.log('Actualización terminada...'))
-    }
-
+  NotificacionPersistent : (msn)=>{
+    
+        if (!('Notification' in window) || !('ServiceWorkerRegistration' in window)) {
+          alert('Persistent Notification API not supported!');
+          return;
+        }
+        
+        try {
+          navigator.serviceWorker.getRegistration()
+            .then(reg => reg.showNotification(msn))
+            .catch(err => alert('Service Worker registration error: ' + err));
+        } catch (err) {
+          alert('Notification API error: ' + err);
+        }
+      
+  }
 
 };
