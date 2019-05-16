@@ -28,8 +28,8 @@ router.use(function (req,res,next) {
   next();
 });
 
-var http = require('http').Server(app);
-var io = require('socket.io')(http);
+//var http = require('http').Server(app);
+//var io = require('socket.io')(http);
 
 app.get("/",function(req,res){
 	res.sendFile(path + 'index.html');
@@ -45,12 +45,12 @@ app.use("*",function(req,res){
   //res.sendFile(path + "APP/views/404.html");
 });
 
-/*
+
 app.listen(PORT, function () {
 	console.log('Servidor iniciado en el puerto ' + String(PORT));
 });
-*/
 
+/*
 io.on('connection', function(socket){
 	socket.on('orden nueva', function(msg,user){
 	  io.emit('orden nueva', msg, user);
@@ -60,7 +60,7 @@ io.on('connection', function(socket){
 http.listen(PORT, function(){
   console.log('listening on *:' + PORT);
 });
-
+*/
 
 /*CODIGO PARA EL HTML Y SOCKET
    $(function () {
