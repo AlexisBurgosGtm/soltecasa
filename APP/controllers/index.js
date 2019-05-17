@@ -12,8 +12,10 @@ function InicializarBotonesMenu(){
   
   InicializarServiceWorkerNotif();
 
-  funciones.loadView('../views/viewInicio.html','contenedor')
-    .then(()=>{
+  //funciones.loadView('../views/viewInicio.html','contenedor')
+  //funciones.loadView('../views/viewOrdenesP.html','contenedor')
+    //.then(()=>{
+
         btnNuevo.style="visibility:visible";
 
         btnInicio.addEventListener('click',()=>{
@@ -21,6 +23,14 @@ function InicializarBotonesMenu(){
         });
         btnNuevo.addEventListener('click',()=>{
           funciones.loadView('../views/viewNuevaOrden.html','contenedor')
+          .then(()=>{
+              funciones.loadScript('../controllers/ordenesp.js','contenedor')
+              .then(()=>{
+                fcnObtenerCorrelativoOrden('txtCorrelativo');
+                CargarBotonesNuevaOrden();
+            })
+              
+          })
         });  
         btnOrdenesP.addEventListener('click', ()=>{
             funciones.loadView('../views/viewOrdenesP.html','contenedor')
@@ -44,8 +54,10 @@ function InicializarBotonesMenu(){
         btnConfig.addEventListener('click', ()=>{
 
         });
+        
+        btnOrdenesP.click();
 
-  })
+  //})
 
 }
 

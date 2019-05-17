@@ -107,15 +107,16 @@ router.post("/nuevaorden", async(req,res)=>{
 	let _mes = req.body.mes;
 	let _dia = req.body.dia;
 	let _noplaca = req.body.noplaca;
-	let _importe = req.body.importe;
+	let _importe = Number(req.body.importe);
+	let _retoque = req.body.retoque;
+	let _aroma = req.body.aroma;
 
 	let token = req.body.token;
 		
-	let sqlQry = 'insert into CW_orders (correlativo,anio,mes,dia,status,noplaca,importe,codcategoria) values (@correlativo,@anio,@mes,@dia,@status,@noplaca,@importe,@codcategoria)'
+	let sqlQry = 'insert into CW_orders (correlativo,anio,mes,dia,status,noplaca,importe,codcategoria,retoque,aroma) values (@correlativo,@anio,@mes,@dia,@status,@noplaca,@importe,@codcategoria,@retoque,@aroma)'
 		const pool1 = await new sql.ConnectionPool(config, err => {
 			// Query
 			new sql.Request(pool1)
-			
 			.input('correlativo', sql.Float, _correlativo)
 			.input('anio', sql.Int, _anio)
 			.input('mes', sql.Int, _mes)
@@ -123,7 +124,9 @@ router.post("/nuevaorden", async(req,res)=>{
 			.input('status', sql.VarChar(2), 'P')
 			.input('noplaca', sql.VarChar(10), _noplaca)
 			.input('importe', sql.Float, _importe)
-			.input('codcategoria', sql.Int, _codcategoria)
+			.input('codcategoria', sql.Int, 0)
+			.input('retoque', sql.VarChar(50), _retoque)
+			.input('aroma', sql.VarChar(50), _aroma)
       		 .query(sqlQry, (err, result) => {
 				if (result.rowsAffected){
 					res.send('Orden Generada exitosamente')
@@ -134,10 +137,70 @@ router.post("/nuevaorden", async(req,res)=>{
 		})
 		pool1.on('error', err => {
 			// ... error handler
+			console.log(err.toString())
 		})
 });
-
-
+// OBTIENE EL CORRELATIVO DE LA ORDEN
+router.get("/ordencorrelativo", async(req,res)=>{
+	const sql = require('mssql')
+	let token = req.query.token;
+	
+			const pool = await new sql.connect(config)		
+			try {
+				const result = await sql.query `SELECT CORRELATIVO FROM CW_TIPODOCUMENTOS WHERE CODDOC='ORDEN'`
+				console.dir('Enviando correlativo de ordenes');
+				res.send(result);
+			} catch (err) {
+				console.log(String(err));
+			}
+			sql.close()
+});
+// ACTUALIZA EL CORRELATIVO DE LA ORDEN
+router.put("/ordencorrelativo", async(req,res)=>{
+	const sql = require('mssql')
+	let token = req.query.token;
+	let correlativo = Number(req.query.correlativo)+1;
+	
+			const pool = await sql.connect(config)		
+			try {
+				const result = await sql.query `UPDATE CW_TIPODOCUMENTOS SET CORRELATIVO=${correlativo} WHERE CODDOC='ORDEN'`
+				console.dir('Enviando update correlativo');
+				res.send(result);
+			} catch (err) {
+				console.log(String(err));
+			}
+			sql.close()
+});
+// OBTIENE LOS SERVICIOS POR CATEGORIA
+router.get("/servicios", async(req,res)=>{
+	const sql = require('mssql')
+	let token = req.query.token;
+	
+			const pool = await new sql.connect(config)		
+			try {
+				const result = await sql.query `SELECT CODPROD,DESCRIPCION,IMPORTE,CODCATEGORIA FROM CW_SERVICIOS`
+				console.dir('Enviando correlativo de ordenes');
+				res.send(result);
+			} catch (err) {
+				console.log(String(err));
+			}
+	sql.close()
+			
+});
+// OBTIENE LAS MARCAS DE LOS VEHICULOS
+router.get("/marcas", async(req,res)=>{
+	const sql = require('mssql')
+	let token = req.query.token;
+			const pool = await new sql.connect(config)		
+			try {
+				const result = await sql.query `SELECT CODMARCA,DESMARCA FROM CW_MARCAS`
+				console.dir('Enviando marcas..');
+				res.send(result);
+			} catch (err) {
+				console.log(String(err));
+			}
+	sql.close()
+});
 
 
 module.exports = router;

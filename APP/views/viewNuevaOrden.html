@@ -2,13 +2,27 @@
     <div class="card-header bg-info">
         <div class="card-group">
             <h5 class="text-white" >Orden No : </h5>
-            <b><h5 id="txtCorrelativo" class="text-white"> 5</h5></b>
+            <b><h5 id="txtCorrelativo" class="text-white">0</h5></b>
         </div>
-        
     </div>
-    
+
+    <!--Datos del cliente-->
     <div class="card-body">
+        <div class="card-group">
+            <div class="col-lg-6 col-ms-6 col-sm-12" align="left">
+                <button class="btn btn-primary btn-round btn-icon" id="btnGuardar">
+                    <i class="fas fa-arrow-right"></i> Guardar Orden
+                </button>
+            </div>
+            <div class="form-group col-lg-6 col-ms-6 col-sm-12" align="right">
+                <label>Total :</label>
+                <label class="text-danger h3">Q </label><label class="text-danger h3" id="txtTotalOrden">0.00</label>
+            </div>
+
+        </div>
+                
         <div class="form-group card-group">
+
             <div class="col-sm-10 col-lg-4">
                 <label>No. Placa: </label>
                 <input type="text" id="txtPlaca" class="form-control text-danger b" placeholder="ej. 123abc">
@@ -24,27 +38,71 @@
             <div class="col-sm-10 col-lg-4">
                 <label>Marca: </label>
                 <select class="form-control" id="cmbMarca">
-                    <option value="1">TOYOTA</option>
+                    
                 </select>
             </div>
             <div class="col-sm-10 col-lg-4">
                 <label>Color: </label>
                 <input type="text" id="txtColor" class="form-control" placeholder="ej. rojo,verde,blanco">
             </div>
-        </div>
-    </div>
-    <hr class="sidebar-divider">
-    <div class="card-body">
-            <div class="form-group card-group">
-                <div class="col-sm-10 col-lg-4">
-                    <label>Tipo de Servicio: </label>
-                    <select class="form-control" id="cmbTipoServicio">
-                        <option value="1">CARWASH</option>
-                        <option value="2">SERVICIO VIP</option>
+            <div class="col-sm-10 col-lg-4">
+                    <label>Retoque: </label>
+                    <select class="form-control" id="cmbRetoque">
+                        <option value="AGUA">AGUA</option>
+                        <option value="SILICON">SILICON</option>
                     </select>
-                </div>
-
+            </div>
+            <div class="col-sm-10 col-lg-4">
+                    <label>Aroma: </label>
+                    <select class="form-control" id="cmbAroma">
+                        <option value="LAVANDA">LAVANDA</option>
+                    </select>
             </div>
         </div>
+
+    </div>
+    
+    <hr class="sidebar-divider">
+    <!--Detalle de la orden-->
+    <div class="card-body">
+        <div class="card-group">
+            <!--tipo de vehiculo-->
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="row">
+                    <h5 class="text-danger">Tipo de Vehículo</h5>
+                </div>
+                <div class="row card">
+                    <select class="form-control" id="contenedor1">
+                    </select>
+                </div>
+            </div>
+            <!--Servicios extra-->            
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="row">
+                    <h5 class="text-danger">Otros Servicios  </h5>
+                    <a class="btn btn-info btn-icon btn-circle btn-sm" id="btnPrecio2">
+                        <i class="fas fa-dollar-sign text-white"></i>
+                    </a>
+                </div>
+                <div class="row card" id="contenedor2">
+
+                </div>
+            </div>
+            <!-- Servicios VIP -->
+            <div class="col-sm-12 col-md-4 col-lg-4">
+                <div class="row">
+                    <h5 class="text-danger">Servicios V.I.P.  </h5>
+                    <a class="btn btn-info btn-icon btn-circle btn-sm" id="btnPrecio3">
+                            <i class="fas fa-dollar-sign text-white"></i>
+                    </a>
+                </div>
+                <div class="row card" id="contenedor3">
+    
+                </div>
+            </div>
+            
+        </div>
+ 
+    </div>
 
 </div>

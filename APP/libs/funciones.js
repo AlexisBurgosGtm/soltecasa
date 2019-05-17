@@ -53,6 +53,25 @@ funciones = {
         })
       },
 
+      SumarATotal: function(idContainerTotal){
+        swal({
+          text: 'Precio por el/los servicios:',
+          content: "input",
+          type:"number",
+          button: {
+            text: "Agregar",
+            closeModal: true,
+          },
+        })
+        .then(valor => {
+          if (!valor) throw null;
+            let c = document.getElementById(idContainerTotal)
+            let val = Number(c.innerText);
+            c.innerText = val + Number(valor);
+            //'tblProductosVentas'
+        })
+      },
+
     setMoneda: function(num,signo) {
         num = num.toString().replace(/\$|\,/g, '');
         if (isNaN(num)) num = "0";
@@ -76,6 +95,19 @@ funciones = {
           script.onerror = reject;
              
           document.getElementById(idContainer).appendChild(script)
+        });
+    },
+    loadCss: function(url, idContainer) {
+        return new Promise((resolve, reject) => {
+          var link = document.createElement('link');
+          //script.async = true;
+          link.href = url;
+          link.rel = "stylesheet"
+    
+          link.onload = resolve;
+          link.onerror = reject;
+             
+          document.getElementById(idContainer).appendChild(link)
         });
     },
 
