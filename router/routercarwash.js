@@ -110,6 +110,10 @@ router.post("/nuevaorden", async(req,res)=>{
 	let _importe = Number(req.body.importe);
 	let _retoque = req.body.retoque;
 	let _aroma = req.body.aroma;
+	let _nomcliente = req.body.nomcliente;
+	let _color = req.body.color;
+	let _telefono = req.body.telefono;
+	let _codmarca = req.body.codmarca;
 
 	let token = req.body.token;
 		
@@ -201,6 +205,5 @@ router.get("/marcas", async(req,res)=>{
 			}
 	sql.close()
 });
-
 
 module.exports = router;
