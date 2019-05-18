@@ -1,3 +1,5 @@
+var socket = io();
+
 //let btnSideBar = document.getElementById('accordionSidebar');
 let btnInicio = document.getElementById('btnInicio');
 let btnOrdenesP = document.getElementById('btnOrdenesP');
@@ -6,7 +8,6 @@ let btnReportes = document.getElementById('btnReportes');
 let btnConfig = document.getElementById('btnConfig');
 let btnNuevo = document.getElementById('btnNuevo');
 btnNuevo.style="visibility:hidden";
-//var socket = io();
 
 function InicializarBotonesMenu(){
   
@@ -85,13 +86,27 @@ function requestPermission() {
   });
 }
 
-/*
+
 socket.on('orden nueva', function(msg){
-    persistentNotification(msg);
-    funciones.hablar(msg);
-  //$('#messages').append($('<li>').text(msg));
+    //persistentNotification(msg);
+    try {
+      fcnCargarOrdenes('tblOrdenes','P');
+    } catch (error) {
+      console.log('No se logró cargar el listado luego del socket')
+    }
+    funciones.NotificacionPersistent(msg);
 });
-*/
+
+socket.on('orden eliminada', function(msg){
+  //persistentNotification(msg);
+  try {
+    fcnCargarOrdenes('tblOrdenes','P');
+  } catch (error) {
+    console.log('No se logró cargar el listado luego del socket')
+  }
+  
+});
+
 
 InicializarBotonesMenu();
 

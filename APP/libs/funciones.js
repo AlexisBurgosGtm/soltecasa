@@ -56,8 +56,8 @@ funciones = {
       SumarATotal: function(idContainerTotal){
         swal({
           text: 'Precio por el/los servicios:',
-          content: "input",
-          type:"number",
+          content: 'input',
+          type:'number',
           button: {
             text: "Agregar",
             closeModal: true,
@@ -68,6 +68,7 @@ funciones = {
             let c = document.getElementById(idContainerTotal)
             let val = Number(c.innerText);
             c.innerText = val + Number(valor);
+            getTotalOrden();
             //'tblProductosVentas'
         })
       },

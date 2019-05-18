@@ -1,7 +1,7 @@
 USE [CARWASH]
 GO
 
-/****** Object:  Table [dbo].[ORDERS]    Script Date: 16/05/2019 01:40:30 ******/
+/****** Object:  Table [dbo].[CW_ORDERS]    Script Date: 17/05/2019 22:07:52 ******/
 SET ANSI_NULLS ON
 GO
 
@@ -11,7 +11,7 @@ GO
 SET ANSI_PADDING ON
 GO
 
-CREATE TABLE [dbo].[ORDERS](
+CREATE TABLE [dbo].[CW_ORDERS](
 	[ID] [int] IDENTITY(1,1) NOT NULL,
 	[CORRELATIVO] [numeric](18, 0) NULL,
 	[FECHA] [date] NULL,
@@ -24,6 +24,7 @@ CREATE TABLE [dbo].[ORDERS](
 	[CODCATEGORIA] [int] NULL,
 	[RETOQUE] [varchar](50) NULL,
 	[AROMA] [varchar](50) NULL,
+	[NOMCLIENTE] [varchar](110) NULL,
  CONSTRAINT [PK_ORDERS] PRIMARY KEY CLUSTERED 
 (
 	[ID] ASC
@@ -34,4 +35,5 @@ GO
 
 SET ANSI_PADDING OFF
 GO
+
 
