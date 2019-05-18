@@ -107,6 +107,15 @@ socket.on('orden eliminada', function(msg){
   
 });
 
+socket.on('orden finalizada', function(msg){
+  //persistentNotification(msg);
+  try {
+    fcnCargarOrdenes('tblOrdenes','P');
+  } catch (error) {
+    console.log('No se logró cargar el listado luego del socket')
+  }
+});
+
 
 InicializarBotonesMenu();
 

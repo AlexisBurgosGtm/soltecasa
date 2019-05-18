@@ -33,8 +33,8 @@ async function fcnCargarOrdenes(idContainer,status){
        document.getElementById(idContainer).innerHTML = tblBody;
 
     } catch (error) {
-        console.log(error);
-        funciones.AvisoError('No se pudo cargar la lista de Ordenes pendientes');
+        console.log('NO SE LOGRO CARGAR LA LISTA DE ORDENES ' + error);
+        //funciones.AvisoError('No se pudo cargar la lista de Ordenes pendientes');
     }
 };
 
@@ -98,6 +98,7 @@ async function fcnFinalizarOrden(correlativo,status){
                     {   
                         fcnCargarOrdenes('tblOrdenes',status);
                         funciones.Aviso(labelAviso);
+                        socket.emit('orden eliminada', correlativo);
                     }
                   })
                   .catch(
@@ -243,6 +244,7 @@ async function fcnObtenerServicios(cont1,cont2){
     }
 
     fcnObtenerMarcas('cmbMarca');
+    
 };
 
 function getPrecioServicio(precio){
@@ -271,9 +273,32 @@ async function fcnObtenerMarcas(idContainer){
        }).join('\n');
 
        c.innerHTML = str1;            
+              
+    } catch (error) {
+        console.log('Error al cargar las marcas' + error);
+    }
+
+    //carga los aromas
+    //fcnObtenerAromas('cmbAroma');
+    
+};
+
+async function fcnObtenerAromas(idContainer){
+    try {
+        const response = await fetch(`/carwash/aromas?token=${GlobalToken}`)
+        const json = await response.json();
+
+        let c = document.getElementById(idContainer);
+        let str1 = '';
+                               
+        json.recordset.map((rows)=>{
+            str1 += `<option value=${rows.DESCRIPCION}>${rows.DESCRIPCION}</option>`
+       }).join('\n');
+
+       c.innerHTML = str1;            
 
     } catch (error) {
-        console.log('Error al cargar los servicios' + error);
+        console.log('Error al cargar los aromas' + error);
     }
 };
 

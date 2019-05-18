@@ -60,7 +60,9 @@ io.on('connection', function(socket){
   socket.on('orden eliminada', function(msg,user){
 	  io.emit('orden eliminada', msg, user);
   });
-
+  socket.on('orden finalizada', function(msg,user){
+	  io.emit('orden finalizada', msg, user);
+  });
 });
 
 http.listen(PORT, function(){

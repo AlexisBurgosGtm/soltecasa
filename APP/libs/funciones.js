@@ -387,16 +387,16 @@ funciones = {
   NotificacionPersistent : (msn)=>{
     
         if (!('Notification' in window) || !('ServiceWorkerRegistration' in window)) {
-          alert('Persistent Notification API not supported!');
+          console.log('Persistent Notification API not supported!');
           return;
         }
         
         try {
           navigator.serviceWorker.getRegistration()
             .then(reg => reg.showNotification(msn))
-            .catch(err => alert('Service Worker registration error: ' + err));
+            .catch(err => console.log('Service Worker registration error: ' + err));
         } catch (err) {
-          alert('Notification API error: ' + err);
+          console.log('Notification API error: ' + err);
         }
       
   }
