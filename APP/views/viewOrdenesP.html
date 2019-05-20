@@ -37,64 +37,67 @@
       </div>
 
 
-      <div class="modal fade" id="ModalNuevaOrden" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+      <div class="modal fade" id="ModOrdenF" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
                     <div class="modal-header">
-                        <label class="modal-title">Nueva Orden</label>
+                        <label class="modal-title text-danger h3" id="txtTituloF">Cobro de la Orden No. </label>
                     </div>
                 <div class="modal-body">
                     <div class="col-12">
                         <div class="form-group">
                             <label>No. Placas : </label>
-                            <input class="form-control" type="text" placeholder="Escriba el No de placa...">
+                            <label class="text-danger" id="txtFPlacas">000</label>
                         </div>
-
                         <div class="form-group">
-                            <label>Nombre del Cliente : </label>
-                            <input class="form-control" type="text" placeholder="Ej. Carlos Andrade">
+                            <label>Cliente : </label>
+                            <label id="txtFCliente" class=""> </label>
+                        </div>
+                        <div class="form-group">
+                            <label>Importe : </label>
+                            <label id="txtFTotal" class="h5 text-danger">0</label>
                         </div>
 
                         <hr class="sidebar-divider">
-                                                
-                        <div class="form-group">
-                            <label>Tipo Auto : </label>
-                            <button class="btn btn-lg btn-round btn-icon btn-danger" id="btnServicioG">Grande</button>
-                            <button class="btn btn-lg btn-round btn-icon btn-warning" id="btnServicioM">Mediano</button>
-                            <button class="btn btn-lg btn-round btn-icon btn-success" id="btnServicioP">Pequeño</button>
-                        </div>
-                        <div class="form-group">
-                            <label>Precio: </label>
-                            <h4 class="text-danger" id="txtServicioPrecio">Q 0.00</h6>
-                        </div>
                         
                         <div class="form-group">
-                                <label>Retoque : </label>
-                                <select class="form-control">
-                                  <option value="AGUA">AGUA</option>
-                                  <option value="SILICON">SILICON</option>
-                                </select>
+                            <label class="text-danger">Detalle de la forma de pago</label>
                         </div>
+                        
+                        <hr class="sidebar-divider">
+
+                        <div class="card-deck">
+                                <div class="form-group col-5">
+                                        <label>Efectivo : </label>
+                                        <input type="number" class="form-control" id="txtFEfectivo" value=0>
+                                    </div>
+            
+                                    <div class="form-group col-5">
+                                        <label>Tarjeta : </label>
+                                        <input type="number" class="form-control" id="txtFTarjeta" value = 0>
+                                    </div>
+                           
+                        </div>
+                        
+
+                        <hr class="sidebar-divider">
+
                         <div class="form-group">
-                            <label>Aroma : </label>
-                            <select class="form-control">
-                              <option value="LAVANDA">LAVANDA</option>
-                              <option value="FLORES">FLORES DEL CAMPO</option>
-                              <option value="CUERO">CUERO</option>
-                              <option value="PARAISO">PARAISO AZUL</option>
-                            </select>
+                            <label>Total pagado : </label>
+                            <label id="txtFSaldo" class="h5 text-danger">0</label>
                         </div>
+
                     </div>
                 </div>
 
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary btn-round" id="btnCancelarOrden" data-dismiss="modal">
+                    <button type="button" class="btn btn-secondary btn-round" id="" data-dismiss="modal">
                         <i class="now-ui-icons ui-1_simple-remove"></i>
                         CANCELAR
                     </button>
-                    <button type="button" class="btn btn-success btn-round" id="btnGuardarOrden">
+                    <button type="button" class="btn btn-success btn-round" id="btnFinalizarOrden" data-dismiss="modal">
                         <li class="fas fa-check"></li>
-                        AGREGAR
+                        COBRAR
                     </button>
                 </div>
             </div>

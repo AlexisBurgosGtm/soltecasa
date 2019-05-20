@@ -20,7 +20,13 @@ function InicializarBotonesMenu(){
         btnNuevo.style="visibility:visible";
 
         btnInicio.addEventListener('click',()=>{
-          funciones.loadView('../views/viewInicio.html','contenedor');
+          funciones.loadView('../views/viewInicio.html','contenedor')
+            .then(()=>{
+              funciones.loadScript('../controllers/dashboard.js','contenedor')
+                .then(()=>{
+                  getTotalesDia();
+                })
+            })
         });
         btnNuevo.addEventListener('click',()=>{
           funciones.loadView('../views/viewNuevaOrden.html','contenedor')
@@ -28,6 +34,7 @@ function InicializarBotonesMenu(){
               funciones.loadScript('../controllers/ordenesp.js','contenedor')
               .then(()=>{
                 fcnObtenerCorrelativoOrden('txtCorrelativo');
+                
                 CargarBotonesNuevaOrden();
             })
               
