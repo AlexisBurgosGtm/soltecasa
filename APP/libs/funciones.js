@@ -359,7 +359,6 @@ funciones = {
         }
   },
 
-
    scrollUp: function(duration, easing) {
       window.scroll(0, 0);
   },
@@ -388,15 +387,23 @@ funciones = {
   },
 
   NotificacionPersistent : (msn)=>{
-    
-        if (!('Notification' in window) || !('ServiceWorkerRegistration' in window)) {
+
+    const options = {
+        body : "Nueva Orden generada",
+        icon: "../favicon.png",
+        vibrate: [1,2,3],
+      }
+      //image: "../favicon.png",
+         if (!('Notification' in window) || !('ServiceWorkerRegistration' in window)) {
           console.log('Persistent Notification API not supported!');
           return;
         }
         
         try {
           navigator.serviceWorker.getRegistration()
-            .then(reg => reg.showNotification(msn))
+            .then(reg => 
+                    reg.showNotification(msn, options)
+                )
             .catch(err => console.log('Service Worker registration error: ' + err));
         } catch (err) {
           console.log('Notification API error: ' + err);

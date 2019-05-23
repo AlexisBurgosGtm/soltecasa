@@ -7,7 +7,10 @@ async function fcnCargarOrdenes(idContainer,status){
         let tblBody = json.recordset.map((rows)=>{
             if (status=='P'){
                 return `<tr>
-                <td>${rows.CORRELATIVO}</td>
+                <td>${rows.CORRELATIVO}
+                    <br>
+                    <small>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</small>
+                </td>
                 <td>${rows.NOPLACA}</td>
                 <td>${rows.DESMARCA}</td>
                 <td><button class="btn btn-md" style='background-color:${rows.COLOR}'>    </button></td>
@@ -32,7 +35,10 @@ async function fcnCargarOrdenes(idContainer,status){
             };
             if (status=='F'){
                 return `<tr>
-                <td>${rows.CORRELATIVO}</td>
+                <td>${rows.CORRELATIVO}
+                <br>
+                    <small>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</small>
+                </td>
                 <td>${rows.NOPLACA}</td>
                 <td>${rows.DESMARCA}</td>
                 <td>${rows.COLOR}</td>
@@ -78,6 +84,7 @@ async function fcnObtenerDatosOrden(correlativo){
             document.getElementById('txtDataTotal').innerHTML = ` <b>${funciones.setMoneda(rows.IMPORTE,'Q ')}</b>`;
             document.getElementById('txtDataRetoque').innerHTML = ` <b>${rows.RETOQUE}</b>`;
             document.getElementById('txtDataAroma').innerHTML = ` <b>${rows.AROMA}</b>`;
+            document.getElementById('txtDataTelefono').innerHTML = `<a href='https://api.whatsapp.com/send?phone=502${rows.TELEFONO}&text=Quick%20Carwash%20'>${rows.TELEFONO}</a>`;
        }).join('\n');
      
     } catch (error) {
@@ -120,13 +127,15 @@ async function fcnObtenerDatosOrdenF(correlativo,placa,cliente,importe){
     });
     
 };
+
 function getTotalPagado(efectivo,tarjeta){
     return Number(efectivo) + Number(tarjeta);
-}
+};
 
 async function fcnFinalizarOrden(correlativo,status){
     let question = '';let url = ''; let labelAviso = '';
-    let efect; let trj;
+    let efect; let tarj;
+    let obs = document.getElementById('txtFObs').value;
 
     if (status=='P'){
         question = '¿Está seguro que desea Finalizar esta Orden?';
@@ -135,7 +144,7 @@ async function fcnFinalizarOrden(correlativo,status){
 
         efect = Number(document.getElementById('txtFEfectivo').value);
         tarj = Number(document.getElementById('txtFTarjeta').value);
-
+        
     };
     if (status=='F'){
         question = '¿Está seguro que desea Re-Activar esta Orden?';
@@ -147,12 +156,13 @@ async function fcnFinalizarOrden(correlativo,status){
         .then(async (value)=>{
             if (value==true){
 
-                   
+                
                     var data =JSON.stringify({
                         token:GlobalToken,
                         correlativo:correlativo,
                         efectivo : efect,
-                        tarjeta: tarj
+                        tarjeta: tarj,
+                        obs: obs
                     });
                   
                     var peticion = new Request(GlobalServerUrl + url, {
@@ -294,7 +304,7 @@ async function fcnObtenerServicios(cont1,cont2){
             };
             if(rows.CODCATEGORIA==2){
                 str2 += `<div class="form-group">
-                             <input type="checkbox" checked data-toggle="toggle" data-on="SI" data-off="NO" data-onstyle="success" data-offstyle="danger" id='${rows.CODPROD}' data-style='ios'>
+                             <input type="checkbox" checked data-toggle="toggle" data-on="SI" data-off="NO" data-onstyle="success" data-offstyle="danger" id='${rows.CODPROD}' onclick('fcnInsertarOrdenDetalle(${rows.CODPROD});')>
                              <label>${rows.DESCRIPCION}</label>
                         </div>`;
             };
@@ -321,6 +331,13 @@ async function fcnObtenerServicios(cont1,cont2){
     fcnObtenerMarcas('cmbMarca');
     
 };
+
+let ArrayServicios
+function fcnAgregarServicio(idServicio){
+    let codprod = idServicio
+    alert(idServicio);
+
+}
 
 function getPrecioServicio(precio){
     let total = document.getElementById('txtTotalLavado');
@@ -384,8 +401,6 @@ async function fcnInsertarOrden(){
         funciones.AvisoError('No se puede guardar una Orden con valor Cero (Q 0.00)');
     }else{
 
-
-
     funciones.Confirmacion('¿Está seguro que desea Guardar esta Orden?')
         .then(async (value)=>{
             if(value==true){
@@ -398,7 +413,7 @@ async function fcnInsertarOrden(){
                 let colorv = document.getElementById('txtColor').value;
                 let retoque = document.getElementById('cmbRetoque').value;
                 let aroma = document.getElementById('cmbAroma').value;
-
+                
                 let fecha = new Date();
                 let anio = fecha.getFullYear();
                 let mes = fecha.getMonth()+1;
@@ -435,10 +450,11 @@ async function fcnInsertarOrden(){
                     //console.log('Estado: ', res.status);
                     if (res.status==200)
                     {   
+
                         //fcnActualizarCorrelativoOrden(correlativo);
                         funciones.Aviso('Orden Generada Exitosamente!!');
                         btnOrdenesP.click();
-                        socket.emit('orden nueva', 'Nueva orden ingresada');
+                        socket.emit('orden nueva', 'Orden No. ' + correlativo + ', Placa: ' + noplaca + ', Aroma: ' + aroma);
                     }
                   })
                   .catch(
@@ -451,6 +467,55 @@ async function fcnInsertarOrden(){
         })
     }
     
+};
+
+async function fcnInsertarOrdenDetalle(idServicio){
+    alert(idServicio);
+        let serv = document.getElementById(idServicio).value
+        if (serv==true){
+                let correlativo = document.getElementById('txtCorrelativo').innerText;
+                let codprod = idServicio;
+                let fecha = new Date();
+                let anio = fecha.getFullYear();
+                let mes = fecha.getMonth()+1;
+                let dia = fecha.getDate();
+              
+             var data =JSON.stringify(
+            {
+                anio:anio,
+                mes:mes,
+                dia:dia,
+                correlativo:correlativo,
+                codprod:codprod,
+                importe:0
+            }
+            );
+
+                var peticion = new Request(GlobalServerUrl + '/carwash/nuevaorden_detalle', {
+                    method: 'POST',
+                    headers: new Headers({
+                        // Encabezados
+                       'Content-Type': 'application/json'
+                    }),
+                    body: data
+                  });
+            
+                  await fetch(peticion)
+                  
+                  .then(function(res) {
+                    //console.log('Estado: ', res.status);
+                    if (res.status==200)
+                    {   
+                        console.log("detalle enviado exitosamente")
+                    }
+                  })
+                  .catch(
+                      ()=>{
+                        //funciones.AvisoError('No se pudo terminar la acción');
+                        console.log('No se pudo terminar la acción');
+                      }
+                  )       
+        }
 };
 
 async function CargarBotonesNuevaOrden(){
@@ -468,7 +533,9 @@ async function CargarBotonesNuevaOrden(){
         fcnObtenerDatosCliente(document.getElementById('txtPlaca').value);
     })
 
-    btnGuardar.addEventListener('click', ()=>{fcnInsertarOrden();});
+    btnGuardar.addEventListener('click', ()=>{
+        fcnInsertarOrden();
+    });
     
 
 }

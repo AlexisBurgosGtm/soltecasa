@@ -3,7 +3,8 @@ const router = express.Router();
 
 const config = {user: 'DB_A45479_EXPRESS_admin',password: 'razors1805',server: 'sql7002.site4now.net',database: 'DB_A45479_EXPRESS',pool: {	max: 100,	min: 0,	idleTimeoutMillis: 30000}};
 //const config = {user: 'iEx', password: 'iEx', server: 'SERVERALEXIS\\SQLEXPRESS', database: 'CARWASH', pool: {max: 100,min: 0,idleTimeoutMillis: 30000}};
-const sqlString = 'mssql://' + config.user + ':' + config.password + '@' + config.server + '/' + config.database;
+
+//const sqlString = 'mssql://' + config.user + ':' + config.password + '@' + config.server + '/' + config.database;
 
 // OBTIENE EL TOTAL DE VENTAS DEL DIA
 router.get("/totaldia", async(req,res)=>{
@@ -41,7 +42,7 @@ router.get("/ordenespendientes", async(req,res)=>{
 	}
 			const pool = await new sql.connect(config)		
 			try {
-				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_ORDERS.NOMCLIENTE, CW_ORDERS.IMPORTE
+				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CLIENTES.TELEFONO, CW_ORDERS.NOMCLIENTE, CW_ORDERS.IMPORTE, CW_ORDERS.ANIO, CW_ORDERS.MES, CW_ORDERS.DIA
 												FROM CW_MARCAS RIGHT OUTER JOIN CW_CLIENTES ON CW_MARCAS.CODMARCA = CW_CLIENTES.CODMARCA RIGHT OUTER JOIN
 												CW_ORDERS ON CW_CLIENTES.NOPLACA = CW_ORDERS.NOPLACA LEFT OUTER JOIN CW_CATEGORIAS ON CW_ORDERS.CODCATEGORIA = CW_CATEGORIAS.CODCATEGORIA
 												WHERE (CW_ORDERS.STATUS = ${st})`
@@ -67,7 +68,7 @@ router.get("/datosorden", async(req,res)=>{
 			const pool = await sql.connect(config)		
 			try {
 				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CATEGORIAS.DESCATEGORIA, CW_ORDERS.IMPORTE, CW_ORDERS.STATUS, CW_ORDERS.RETOQUE, CW_ORDERS.AROMA, 
-												CW_ORDERS_DETAILS.CODPROD, CW_ORDERS_DETAILS.DESCRIPCION, CW_ORDERS_DETAILS.IMPORTE AS IMPORTEPRODUCTO, CW_CLIENTES.NOMCLIENTE
+												CW_ORDERS_DETAILS.CODPROD, CW_ORDERS_DETAILS.DESCRIPCION, CW_ORDERS_DETAILS.IMPORTE AS IMPORTEPRODUCTO, CW_CLIENTES.NOMCLIENTE, CW_CLIENTES.TELEFONO
 												FROM CW_ORDERS_DETAILS RIGHT OUTER JOIN
 												CW_ORDERS ON CW_ORDERS_DETAILS.MES = CW_ORDERS.MES AND CW_ORDERS_DETAILS.ANIO = CW_ORDERS.ANIO AND CW_ORDERS_DETAILS.CORRELATIVO = CW_ORDERS.CORRELATIVO LEFT OUTER JOIN
 												CW_MARCAS RIGHT OUTER JOIN CW_CLIENTES ON CW_MARCAS.CODMARCA = CW_CLIENTES.CODMARCA ON CW_ORDERS.NOPLACA = CW_CLIENTES.NOPLACA LEFT OUTER JOIN
@@ -102,18 +103,18 @@ router.get("/datoscliente", async(req,res)=>{
 });
 // FINALIZA UNA ORDEN PENDIENTE
 router.put("/finalizarorden", async(req,res)=>{
-
 	const sql = require('mssql')
-	
+
 	try {sql.close()} catch (error) {}
 
 	let correlativo = req.body.correlativo;
 	let tarjeta = Number(req.body.tarjeta);
 	let efectivo = Number(req.body.efectivo);
+	let obs = req.body.obs;
 	let token = req.body.token;
 		
-	let sqlQry = `update CW_orders set status='F', totaltarjeta=${tarjeta}, totalefectivo=${efectivo} where correlativo=${correlativo}`
-
+	let sqlQry = `update CW_orders set status='F', totaltarjeta=${tarjeta}, totalefectivo=${efectivo}, obs='${obs}' where correlativo=${correlativo}`
+		
 		const pool1 = await new sql.ConnectionPool(config, err => {
 			// Query
 			new sql.Request(pool1)
@@ -128,6 +129,7 @@ router.put("/finalizarorden", async(req,res)=>{
 		})
 		pool1.on('error', err => {
 			// ... error handler
+			console.log('Error al finalizar: ' + err)
 		})
 });
 // CAMBIA EL STATUS DE UNA ORDEN A PENDIENTE
@@ -173,28 +175,28 @@ router.post("/nuevaorden", async(req,res)=>{
 	let _aroma = req.body.aroma;
 	let _telefono = req.body.telefono;
 	let _codmarca = parseInt(req.body.codmarca);
+	//let _obs = req.body.obs;
 
 	let _nomcliente = req.body.nomcliente;
 	let _color = req.body.colorv;
 	console.log('var color : '+_color)
-
 		
 	var sqlQry = 'INSERT INTO CW_ORDERS (CORRELATIVO,FECHA,ANIO,MES,DIA,STATUS,NOPLACA,IMPORTE,CODCATEGORIA,RETOQUE,AROMA,NOMCLIENTE,TOTALEFECTIVO,TOTALTARJETA) VALUES (@CORRELATIVO,@FECHA,@ANIO,@MES,@DIA,@STATUS,@NOPLACA,@IMPORTE,@CODCATEGORIA,@RETOQUE,@AROMA,@NOMCLIENTE,0,0)'
 		
 	let pool = await sql.connect(config)
-			// INSERTA EL CLIENTE COMO NUEVO O ACTUALIZA SI YA EXISTE
-			let descrip = ' ';
-			try {
+		// INSERTA EL CLIENTE COMO NUEVO O ACTUALIZA SI YA EXISTE
+		let descrip = ' ';
+		try {
 				const result3  = await sql.query `INSERT INTO CW_CLIENTES (NOPLACA,CODMARCA,COLOR,NOMCLIENTE,TELEFONO,DESCRIPCION) VALUES (${_noplaca},${_codmarca},${_color},${_nomcliente},${_telefono},${descrip})`
 				console.dir('Cliente nuevo ingresado exitosamente');
-			} catch (err) {
+		} catch (err) {
 				//await sql.connect(config)
 				const result3  = await sql.query `UPDATE CW_CLIENTES SET 
 							CODMARCA=${_codmarca},COLOR=${_color},NOMCLIENTE=${_nomcliente},TELEFONO=${_telefono},DESCRIPCION=${descrip}
 							WHERE NOPLACA=${_noplaca}`
 				console.dir('Cliente actualizado exitosamente');
 				//res.send(result2);
-			}	
+		}
 		// INSERTA LA NUEVA ORDEN
 		try {
 			let result1 = await pool.request()
@@ -230,12 +232,68 @@ router.post("/nuevaorden", async(req,res)=>{
 		} catch (err) {
 			console.log('Error al actualizar correlativo : ' + String(err));
 		}
-
 		 
 	sql.on('error', err => {
 		// ... error handler
 		console.log('error sql: ' + err.toString())
 	})
+
+});
+// INSERTA ORDEN DETALLES
+router.post("/nuevaorden_detalle", async(req,res)=>{
+	//const sql = require('mssql')
+	//try {sql.close()} catch (error) {};
+
+alert(req.body.codprod);
+
+	
+	/*
+	var sqlQry = 'INSERT INTO CW_ORDERS (CORRELATIVO,FECHA,ANIO,MES,DIA,STATUS,NOPLACA,IMPORTE,CODCATEGORIA,RETOQUE,AROMA,NOMCLIENTE,TOTALEFECTIVO,TOTALTARJETA) VALUES (@CORRELATIVO,@FECHA,@ANIO,@MES,@DIA,@STATUS,@NOPLACA,@IMPORTE,@CODCATEGORIA,@RETOQUE,@AROMA,@NOMCLIENTE,0,0)'
+	
+	
+	let pool = await sql.connect(config)
+	
+		// INSERTA LA NUEVA ORDEN
+		try {
+			let result1 = await pool.request()
+				.input('CORRELATIVO', sql.Float, _correlativo)
+				.input('FECHA', sql.Date, _fecha)
+				.input('ANIO', sql.Int, _anio)
+				.input('MES', sql.Int, _mes)
+				.input('DIA', sql.Int, _dia)
+				.input('STATUS', sql.VarChar(2), 'P')
+				.input('NOPLACA', sql.VarChar(15), _noplaca)
+				.input('IMPORTE', sql.Float, _importe)
+				.input('CODCATEGORIA', sql.Int, 0)
+				.input('RETOQUE', sql.VarChar(20), _retoque)
+				.input('AROMA', sql.VarChar(20), _aroma)
+				.input('NOMCLIENTE', sql.VarChar(150), _nomcliente)
+				.query(sqlQry)
+				if (result1.rowsAffected){
+					res.send('Ingresada exitosamente')
+				}
+				
+			//console.dir(result1)
+					
+		} catch (err) {
+			// ... error checks
+			console.log(err);
+		}
+		// ACTUALIZA EL CORRELATIVO
+		try {
+			let nuevocorrelativo = _correlativo +1;
+			const result  = await sql.query `UPDATE CW_TIPODOCUMENTOS SET CORRELATIVO=${nuevocorrelativo} WHERE CODDOC='ORDEN'`
+			console.dir('Correlativo actualizado con exito');
+			
+		} catch (err) {
+			console.log('Error al actualizar correlativo : ' + String(err));
+		}
+		 
+	sql.on('error', err => {
+		// ... error handler
+		console.log('error sql: ' + err.toString())
+	})
+*/
 
 });
 // ELIMINA COMPLETAMENTE UNA ORDEN
