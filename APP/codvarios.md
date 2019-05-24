@@ -21,6 +21,7 @@
                 document.getElementById('txtTotalOrden').innerText = importe;
             }
         })
+        
     })
     */
 

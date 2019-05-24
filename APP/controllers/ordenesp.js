@@ -9,7 +9,7 @@ async function fcnCargarOrdenes(idContainer,status){
                 return `<tr>
                 <td>${rows.CORRELATIVO}
                     <br>
-                    <small>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</small>
+                    <small><b>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</b></small>
                 </td>
                 <td>${rows.NOPLACA}</td>
                 <td>${rows.DESMARCA}</td>
@@ -23,7 +23,7 @@ async function fcnCargarOrdenes(idContainer,status){
                 </td>
                 <td>
                     <button class="btn btn-sm btn-icon btn-circle btn-info" data-toggle="modal" data-target="#ModOrdenF" onclick="fcnObtenerDatosOrdenF(${rows.CORRELATIVO},'${rows.NOPLACA}','${rows.NOMCLIENTE}',${rows.IMPORTE});">
-                        <i class="fas fa-fw fa-bell"></i>
+                        <i class="fas fa-fw fa-dollar-sign"></i>
                     </button>
                 </td>
                 <td>
@@ -37,7 +37,7 @@ async function fcnCargarOrdenes(idContainer,status){
                 return `<tr>
                 <td>${rows.CORRELATIVO}
                 <br>
-                    <small>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</small>
+                    <small><b>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</b></small>
                 </td>
                 <td>${rows.NOPLACA}</td>
                 <td>${rows.DESMARCA}</td>
@@ -50,7 +50,7 @@ async function fcnCargarOrdenes(idContainer,status){
                     </button>
                 </td>
                 <td>
-                    <button class="btn btn-sm btn-icon btn-circle btn-info" onclick="fcnFinalizarOrden(${rows.CORRELATIVO},'${status}');">
+                    <button class="btn btn-sm btn-icon btn-circle btn-warning" onclick="fcnFinalizarOrden(${rows.CORRELATIVO},'${status}');">
                         <i class="fas fa-fw fa-bell"></i>
                     </button>
                 </td>
@@ -85,6 +85,11 @@ async function fcnObtenerDatosOrden(correlativo){
             document.getElementById('txtDataRetoque').innerHTML = ` <b>${rows.RETOQUE}</b>`;
             document.getElementById('txtDataAroma').innerHTML = ` <b>${rows.AROMA}</b>`;
             document.getElementById('txtDataTelefono').innerHTML = `<a href='https://api.whatsapp.com/send?phone=502${rows.TELEFONO}&text=Quick%20Carwash%20'>${rows.TELEFONO}</a>`;
+            let strServicios = ''
+            if(rows.O1==1){strServicios+='LIMPIEZA DE TAPICERIA, '};if(rows.O2==1){strServicios+='RESTAURACION DE SILVINES, '};
+            if(rows.O3==1){strServicios+='RESTAURACION DE PLASTICOS, '};if(rows.O4==1){strServicios+='PULIDO Y LUSTRADO, '};
+            if(rows.O5==1){strServicios+='LUSTRADO A MANO, '};if(rows.O6==1){strServicios+='LIMPIEZA DE AROS'};
+            document.getElementById('txtDataOtrosServicios').innerText = strServicios
        }).join('\n');
      
     } catch (error) {
@@ -135,7 +140,7 @@ function getTotalPagado(efectivo,tarjeta){
 async function fcnFinalizarOrden(correlativo,status){
     let question = '';let url = ''; let labelAviso = '';
     let efect; let tarj;
-    let obs = document.getElementById('txtFObs').value;
+    let obs
 
     if (status=='P'){
         question = '¿Está seguro que desea Finalizar esta Orden?';
@@ -144,12 +149,13 @@ async function fcnFinalizarOrden(correlativo,status){
 
         efect = Number(document.getElementById('txtFEfectivo').value);
         tarj = Number(document.getElementById('txtFTarjeta').value);
-        
+        obs = document.getElementById('txtFObs').value;
     };
     if (status=='F'){
         question = '¿Está seguro que desea Re-Activar esta Orden?';
         url = '/carwash/reactivarorden';
         labelAviso = 'Orden Re-Activada Exitosamente';
+        obs= 'SN'
     }
 
     funciones.Confirmacion(question)
@@ -302,27 +308,33 @@ async function fcnObtenerServicios(cont1,cont2){
                             <li class='fa fa-bell'></li>${rows.DESCRIPCION}
                         </button><br>`;
             };
+            /*
             if(rows.CODCATEGORIA==2){
                 str2 += `<div class="form-group">
                              <input type="checkbox" checked data-toggle="toggle" data-on="SI" data-off="NO" data-onstyle="success" data-offstyle="danger" id='${rows.CODPROD}' onclick('fcnInsertarOrdenDetalle(${rows.CODPROD});')>
                              <label>${rows.DESCRIPCION}</label>
                         </div>`;
-            };
+            };*/
        }).join('\n');
 
        //document.getElementById('xxx').checked
        c1.innerHTML = '';
-       c2.innerHTML = '';
+       //c2.innerHTML = '';
        c1.innerHTML = str1;
-       c2.innerHTML = str2;
-       //c3.innerHTML = str3;
-
+       //c2.innerHTML = str2;
+       /*
        json.recordset.map((rows)=>{
             if(rows.CODCATEGORIA==2){
                 $(`#${rows.CODPROD}`).bootstrapToggle().bootstrapToggle('off');
             }
         }).join('\n');
-       
+       */
+      $('#txtLimpTapiz').bootstrapToggle().bootstrapToggle('off');
+      $('#txtRestSilv').bootstrapToggle().bootstrapToggle('off');
+      $('#txtRestPlas').bootstrapToggle().bootstrapToggle('off');
+      $('#txtPulLust').bootstrapToggle().bootstrapToggle('off');
+      $('#txtLustMan').bootstrapToggle().bootstrapToggle('off');
+      $('#txtLimpAros').bootstrapToggle().bootstrapToggle('off');
 
     } catch (error) {
         console.log('Error al cargar los servicios' + error);
@@ -331,13 +343,6 @@ async function fcnObtenerServicios(cont1,cont2){
     fcnObtenerMarcas('cmbMarca');
     
 };
-
-let ArrayServicios
-function fcnAgregarServicio(idServicio){
-    let codprod = idServicio
-    alert(idServicio);
-
-}
 
 function getPrecioServicio(precio){
     let total = document.getElementById('txtTotalLavado');
@@ -414,6 +419,15 @@ async function fcnInsertarOrden(){
                 let retoque = document.getElementById('cmbRetoque').value;
                 let aroma = document.getElementById('cmbAroma').value;
                 
+                let otrolimptapiz; if($('#txtLimpTapiz').prop('checked')==true){otrolimptapiz=1}else{otrolimptapiz=0};
+                let otrorestsilv; if($('#txtRestSilv').prop('checked')==true){otrorestsilv=1}else{otrorestsilv=0};
+                let otrorestplast; if($('#txtRestPlas').prop('checked')==true){otrorestplast=1}else{otrorestplast=0};
+                let otropulidolustrado; if($('#txtPulLust').prop('checked')==true){otropulidolustrado=1}else{otropulidolustrado=0};
+                let otrolustrmano; if($('#txtLustMan').prop('checked')==true){otrolustrmano=1}else{otrolustrmano=0};
+                let otrolimparos;if($('#txtLimpAros').prop('checked')==true){otrolimparos=1}else{otrolimparos=0};
+
+                console.log('otro 1: ' + otrolimptapiz);
+
                 let fecha = new Date();
                 let anio = fecha.getFullYear();
                 let mes = fecha.getMonth()+1;
@@ -432,7 +446,13 @@ async function fcnInsertarOrden(){
                     nomcliente : nomcliente,
                     colorv : colorv,
                     telefono : telefono,
-                    codmarca : codmarca
+                    codmarca : codmarca,
+                    o1: otrolimptapiz,
+                    o2: otrorestsilv,
+                    o3: otrorestplast,
+                    o4: otropulidolustrado,
+                    o5: otrolustrmano,
+                    o6: otrolimparos
                 });
               
                 var peticion = new Request(GlobalServerUrl + '/carwash/nuevaorden', {
@@ -467,55 +487,6 @@ async function fcnInsertarOrden(){
         })
     }
     
-};
-
-async function fcnInsertarOrdenDetalle(idServicio){
-    alert(idServicio);
-        let serv = document.getElementById(idServicio).value
-        if (serv==true){
-                let correlativo = document.getElementById('txtCorrelativo').innerText;
-                let codprod = idServicio;
-                let fecha = new Date();
-                let anio = fecha.getFullYear();
-                let mes = fecha.getMonth()+1;
-                let dia = fecha.getDate();
-              
-             var data =JSON.stringify(
-            {
-                anio:anio,
-                mes:mes,
-                dia:dia,
-                correlativo:correlativo,
-                codprod:codprod,
-                importe:0
-            }
-            );
-
-                var peticion = new Request(GlobalServerUrl + '/carwash/nuevaorden_detalle', {
-                    method: 'POST',
-                    headers: new Headers({
-                        // Encabezados
-                       'Content-Type': 'application/json'
-                    }),
-                    body: data
-                  });
-            
-                  await fetch(peticion)
-                  
-                  .then(function(res) {
-                    //console.log('Estado: ', res.status);
-                    if (res.status==200)
-                    {   
-                        console.log("detalle enviado exitosamente")
-                    }
-                  })
-                  .catch(
-                      ()=>{
-                        //funciones.AvisoError('No se pudo terminar la acción');
-                        console.log('No se pudo terminar la acción');
-                      }
-                  )       
-        }
 };
 
 async function CargarBotonesNuevaOrden(){

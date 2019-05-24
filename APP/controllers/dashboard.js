@@ -1,6 +1,17 @@
+try {
+    let btnCargarFechaInicio = document.getElementById('btnCargarFechaInicio');
+    btnCargarFechaInicio.addEventListener('click', ()=>{
+        fcnCargarOrdenesFecha('tblOrdenesInicio')
+    })
+    
+} catch (error) {
+    
+}
+
+
 async function getTotalesDia(){
-    let f = new Date();
-    let hoy = f.toDateString();
+    
+    let f = new Date(document.getElementById('txtFecha').value); //new Date();
     let anio = f.getFullYear();
     let mes = f.getMonth()+1;
     let dia = f.getDate();
@@ -12,7 +23,7 @@ async function getTotalesDia(){
         json.recordset.map((rows)=>{
             document.getElementById('txtTotalDia').innerText = funciones.setMoneda(rows.IMPORTE, 'Q ');
             document.getElementById('txtTotalOrdenes').innerText = rows.CONTEO;
-            document.getElementById('txtFecha').innerText = hoy;
+            
             //document.getElementById('txtTotalOrdenes').innerText = rows.CONTEO;
        }).join('\n');
      
@@ -20,8 +31,48 @@ async function getTotalesDia(){
         console.log('Error al cargar datos de la orden ' + error);
         document.getElementById('txtTotalDia').innerText = 'Q 0.00';
         document.getElementById('txtTotalOrdenes').innerText = 0;
-        document.getElementById('txtFecha').innerText = hoy;
+        //document.getElementById('txtFecha').innerText = hoy;
     }
 
 
+};
+
+async function fcnCargarOrdenesFecha(idContainer){
+
+    let f = new Date(document.getElementById('txtFecha').value); //new Date();
+    let anio = f.getFullYear();
+    let mes = f.getMonth()+1;
+    let dia = f.getDate();
+    
+    try {
+        const response = await fetch(`/carwash/ordenesfecha?token=${GlobalToken}&anio=${anio}&mes=${mes}&dia=${dia}`)
+        const json = await response.json();
+         
+        let tblBody = json.recordset.map((rows)=>{
+            return `<tr>
+                <td>${rows.CORRELATIVO}
+                <br>
+                    <small><b>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</b></small>
+                </td>
+                <td>${rows.NOPLACA}</td>
+                <td>${rows.DESMARCA}</td>
+                <td>${rows.COLOR}</td>
+                <td>${rows.NOMCLIENTE}</td>
+                <td>${funciones.setMoneda(rows.IMPORTE,'Q ')}</td>
+                <td>
+                    <button class="btn btn-sm btn-icon btn-circle btn-primary" data-toggle="modal" data-target="#ModOrdenDetalle" onclick="fcnObtenerDatosOrden(${rows.CORRELATIVO});">
+                        <i class="fas fa-fw fa-table"></i>
+                    </button>
+                </td>
+            </tr>`;                   
+       }).join('\n');
+
+       document.getElementById(idContainer).innerHTML = tblBody;
+
+       getTotalesDia();
+
+    } catch (error) {
+        console.log('NO SE LOGRO CARGAR LA LISTA DE ORDENES ' + error);
+        //funciones.AvisoError('No se pudo cargar la lista de Ordenes pendientes');
+    }
 };

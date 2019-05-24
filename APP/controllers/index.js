@@ -24,7 +24,7 @@ function InicializarBotonesMenu(){
             .then(()=>{
               funciones.loadScript('../controllers/dashboard.js','contenedor')
                 .then(()=>{
-                  getTotalesDia();
+                  //getTotalesDia();
                 })
             })
         });
