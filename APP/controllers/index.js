@@ -1,10 +1,10 @@
-var socket = io();
+﻿var socket = io();
 
 //let btnSideBar = document.getElementById('accordionSidebar');
 let btnInicio = document.getElementById('btnInicio');
 let btnOrdenesP = document.getElementById('btnOrdenesP');
 let btnOrdenesF = document.getElementById('btnOrdenesF');
-let btnReportes = document.getElementById('btnReportes');
+//let btnReportes = document.getElementById('btnReportes');
 let btnConfig = document.getElementById('btnConfig');
 let btnNuevo = document.getElementById('btnNuevo');
 btnNuevo.style="visibility:hidden";
@@ -57,9 +57,6 @@ function InicializarBotonesMenu(){
             funciones.loadScript('../controllers/ordenesp.js','contenedor')
               .then(()=>{fcnCargarOrdenes('tblOrdenes','F');})
           })
-        });
-        btnReportes.addEventListener('click', ()=>{
-
         });
         btnConfig.addEventListener('click', ()=>{
 
