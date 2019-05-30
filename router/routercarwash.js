@@ -21,7 +21,7 @@ router.get("/totaldia", async(req,res)=>{
 		try {
 			const result = await sql.query `SELECT COUNT(CORRELATIVO) AS CONTEO, SUM(IMPORTE) AS IMPORTE, SUM(TOTALTARJETA) AS TARJETA, SUM(TOTALEFECTIVO) AS EFECTIVO
 											FROM CW_ORDERS
-											WHERE (STATUS = 'F') AND (ANIO = ${_anio}) AND (MES = ${_mes}) AND (DIA = ${_dia})`
+											WHERE (STATUS = 'F') AND (ANIOFIN = ${_anio}) AND (MESFIN = ${_mes}) AND (DIAFIN = ${_dia})`
 				console.dir('Enviando total dia');
 				res.send(result);
 			} catch (err) {
@@ -42,7 +42,8 @@ router.get("/ordenespendientes", async(req,res)=>{
 	}
 			const pool = await new sql.connect(config)		
 			try {
-				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CLIENTES.TELEFONO, CW_ORDERS.NOMCLIENTE, CW_ORDERS.IMPORTE, CW_ORDERS.ANIO, CW_ORDERS.MES, CW_ORDERS.DIA, CW_ORDERS.O1, CW_ORDERS.O2, CW_ORDERS.O3, CW_ORDERS.O4, CW_ORDERS.O5, CW_ORDERS.O6
+				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CLIENTES.TELEFONO, CW_ORDERS.NOMCLIENTE, CW_ORDERS.IMPORTE, CW_ORDERS.ANIO, CW_ORDERS.MES, CW_ORDERS.DIA, CW_ORDERS.O1, CW_ORDERS.O2, CW_ORDERS.O3, CW_ORDERS.O4, CW_ORDERS.O5, CW_ORDERS.O6,
+												CW_ORDERS.ANIOFIN,CW_ORDERS.MESFIN,CW_ORDERS.DIAFIN
 												FROM CW_MARCAS RIGHT OUTER JOIN CW_CLIENTES ON CW_MARCAS.CODMARCA = CW_CLIENTES.CODMARCA RIGHT OUTER JOIN
 												CW_ORDERS ON CW_CLIENTES.NOPLACA = CW_ORDERS.NOPLACA LEFT OUTER JOIN CW_CATEGORIAS ON CW_ORDERS.CODCATEGORIA = CW_CATEGORIAS.CODCATEGORIA
 												WHERE (CW_ORDERS.STATUS = ${st})`
@@ -69,10 +70,10 @@ router.get("/ordenesfecha", async(req,res)=>{
 	}
 			const pool = await new sql.connect(config)		
 			try {
-				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CLIENTES.TELEFONO, CW_ORDERS.NOMCLIENTE, CW_ORDERS.IMPORTE, CW_ORDERS.ANIO, CW_ORDERS.MES, CW_ORDERS.DIA, CW_ORDERS.O1, CW_ORDERS.O2, CW_ORDERS.O3, CW_ORDERS.O4, CW_ORDERS.O5, CW_ORDERS.O6
+				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CLIENTES.TELEFONO, CW_ORDERS.NOMCLIENTE, CW_ORDERS.IMPORTE, CW_ORDERS.ANIO, CW_ORDERS.MES, CW_ORDERS.DIA, CW_ORDERS.O1, CW_ORDERS.O2, CW_ORDERS.O3, CW_ORDERS.O4, CW_ORDERS.O5, CW_ORDERS.O6,CW_ORDERS.OBS
 												FROM CW_MARCAS RIGHT OUTER JOIN CW_CLIENTES ON CW_MARCAS.CODMARCA = CW_CLIENTES.CODMARCA RIGHT OUTER JOIN
 												CW_ORDERS ON CW_CLIENTES.NOPLACA = CW_ORDERS.NOPLACA LEFT OUTER JOIN CW_CATEGORIAS ON CW_ORDERS.CODCATEGORIA = CW_CATEGORIAS.CODCATEGORIA
-												WHERE (CW_ORDERS.ANIO = ${_anio}) AND (CW_ORDERS.MES = ${_mes}) AND (CW_ORDERS.DIA = ${_dia}) AND (CW_ORDERS.STATUS = 'F')`
+												WHERE (CW_ORDERS.ANIOFIN = ${_anio}) AND (CW_ORDERS.MESFIN = ${_mes}) AND (CW_ORDERS.DIAFIN = ${_dia}) AND (CW_ORDERS.STATUS = 'F')`
 				console.dir('Enviando ordenes de fecha ' + _dia + '/' + _mes + '/' + _anio);
 				res.send(result);
 			} catch (err) {
@@ -90,14 +91,16 @@ router.get("/datosorden", async(req,res)=>{
 
 			const pool = await sql.connect(config)		
 			try {
-				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CATEGORIAS.DESCATEGORIA, CW_ORDERS.IMPORTE, CW_ORDERS.STATUS, CW_ORDERS.RETOQUE, CW_ORDERS.AROMA, 
-												CW_ORDERS_DETAILS.CODPROD, CW_ORDERS_DETAILS.DESCRIPCION, CW_ORDERS_DETAILS.IMPORTE AS IMPORTEPRODUCTO, CW_CLIENTES.NOMCLIENTE, CW_CLIENTES.TELEFONO,
-												CW_ORDERS.O1,CW_ORDERS.O2,CW_ORDERS.O3,CW_ORDERS.O4,CW_ORDERS.O5,CW_ORDERS.O6
-												FROM CW_ORDERS_DETAILS RIGHT OUTER JOIN
-												CW_ORDERS ON CW_ORDERS_DETAILS.MES = CW_ORDERS.MES AND CW_ORDERS_DETAILS.ANIO = CW_ORDERS.ANIO AND CW_ORDERS_DETAILS.CORRELATIVO = CW_ORDERS.CORRELATIVO LEFT OUTER JOIN
-												CW_MARCAS RIGHT OUTER JOIN CW_CLIENTES ON CW_MARCAS.CODMARCA = CW_CLIENTES.CODMARCA ON CW_ORDERS.NOPLACA = CW_CLIENTES.NOPLACA LEFT OUTER JOIN
-												CW_CATEGORIAS ON CW_ORDERS.CODCATEGORIA = CW_CATEGORIAS.CODCATEGORIA
-												WHERE (CW_ORDERS.CORRELATIVO = ${correlativo})`
+				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CATEGORIAS.DESCATEGORIA, CW_ORDERS.IMPORTE, CW_ORDERS.STATUS, 
+											CW_ORDERS.RETOQUE, CW_ORDERS.AROMA, CW_CLIENTES.NOMCLIENTE, CW_CLIENTES.TELEFONO, CW_ORDERS.O1, CW_ORDERS.O2, CW_ORDERS.O3, CW_ORDERS.O4, CW_ORDERS.O5, 
+											CW_ORDERS.O6, CW_SERVICIOS.DESCRIPCION AS CARWASH,
+											CW_ORDERS.ANIOFIN,CW_ORDERS.MESFIN,CW_ORDERS.DIAFIN
+											FROM CW_ORDERS LEFT OUTER JOIN
+											CW_SERVICIOS ON CW_ORDERS.TIPOCARWASH = CW_SERVICIOS.CODPROD LEFT OUTER JOIN
+											CW_MARCAS RIGHT OUTER JOIN
+											CW_CLIENTES ON CW_MARCAS.CODMARCA = CW_CLIENTES.CODMARCA ON CW_ORDERS.NOPLACA = CW_CLIENTES.NOPLACA LEFT OUTER JOIN
+											CW_CATEGORIAS ON CW_ORDERS.CODCATEGORIA = CW_CATEGORIAS.CODCATEGORIA
+											WHERE (CW_ORDERS.CORRELATIVO = ${correlativo})`
 				console.dir('Enviando datos de la orden no. ' + correlativo);
 				res.send(result);
 			} catch (err) {
@@ -130,14 +133,28 @@ router.put("/finalizarorden", async(req,res)=>{
 	const sql = require('mssql')
 
 	try {sql.close()} catch (error) {}
+	
+	let fechafin = new Date();
 
 	let correlativo = req.body.correlativo;
 	let tarjeta = Number(req.body.tarjeta);
 	let efectivo = Number(req.body.efectivo);
 	let obs = req.body.obs;
+	let aniofin = fechafin.getFullYear();
+	let mesfin = fechafin.getMonth()+1;
+	let diafin = fechafin.getDate();
+
+
 	let token = req.body.token;
 		
-	let sqlQry = `update CW_orders set status='F', totaltarjeta=${tarjeta}, totalefectivo=${efectivo}, obs='${obs}' where correlativo=${correlativo}`
+	let sqlQry = `update CW_orders set status='F', 
+									totaltarjeta=${tarjeta}, 
+									totalefectivo=${efectivo}, 
+									obs='${obs}',
+									aniofin=${aniofin},
+									mesfin=${mesfin},
+									diafin=${diafin} 
+									where correlativo=${correlativo}`
 		
 		const pool1 = await new sql.ConnectionPool(config, err => {
 			// Query
@@ -201,6 +218,7 @@ router.post("/nuevaorden", async(req,res)=>{
 	let _codmarca = parseInt(req.body.codmarca);
 	let _nomcliente = req.body.nomcliente;
 	let _color = req.body.colorv;
+	let _tipocarwash = Number(req.body.tipocarwash);
 
 	let _o1 = req.body.o1;
 	let _o2 = req.body.o2;
@@ -212,7 +230,7 @@ router.post("/nuevaorden", async(req,res)=>{
 	console.log( 'otros 1: ' + _o1)
 
 			
-	var sqlQry = 'INSERT INTO CW_ORDERS (CORRELATIVO,FECHA,ANIO,MES,DIA,STATUS,NOPLACA,IMPORTE,CODCATEGORIA,RETOQUE,AROMA,NOMCLIENTE,TOTALEFECTIVO,TOTALTARJETA,O1,O2,O3,O4,O5,O6) VALUES (@CORRELATIVO,@FECHA,@ANIO,@MES,@DIA,@STATUS,@NOPLACA,@IMPORTE,@CODCATEGORIA,@RETOQUE,@AROMA,@NOMCLIENTE,0,0,@O1,@O2,@O3,@O4,@O5,@O6)'
+	var sqlQry = 'INSERT INTO CW_ORDERS (CORRELATIVO,FECHA,ANIO,MES,DIA,STATUS,NOPLACA,IMPORTE,CODCATEGORIA,RETOQUE,AROMA,NOMCLIENTE,TOTALEFECTIVO,TOTALTARJETA,O1,O2,O3,O4,O5,O6,TIPOCARWASH) VALUES (@CORRELATIVO,@FECHA,@ANIO,@MES,@DIA,@STATUS,@NOPLACA,@IMPORTE,@CODCATEGORIA,@RETOQUE,@AROMA,@NOMCLIENTE,0,0,@O1,@O2,@O3,@O4,@O5,@O6,@TIPOCARWASH)'
 		
 	let pool = await sql.connect(config)
 		// INSERTA EL CLIENTE COMO NUEVO O ACTUALIZA SI YA EXISTE
@@ -249,6 +267,7 @@ router.post("/nuevaorden", async(req,res)=>{
 				.input('O4', sql.SmallInt, _o4)
 				.input('O5', sql.SmallInt, _o5)
 				.input('O6', sql.SmallInt, _o6)
+				.input('TIPOCARWASH', sql.Int,_tipocarwash)
 				.query(sqlQry)
 				if (result1.rowsAffected){
 					res.send('Ingresada exitosamente')

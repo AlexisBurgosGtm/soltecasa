@@ -386,10 +386,10 @@ funciones = {
       )
   },
 
-  NotificacionPersistent : (msn)=>{
+  NotificacionPersistent : (msn,tittle)=>{
 
     const options = {
-        body : "Nueva Orden generada",
+        body : msn,
         icon: "../favicon.png",
         vibrate: [1,2,3],
       }
@@ -402,7 +402,7 @@ funciones = {
         try {
           navigator.serviceWorker.getRegistration()
             .then(reg => 
-                    reg.showNotification(msn, options)
+                    reg.showNotification(tittle, options)
                 )
             .catch(err => console.log('Service Worker registration error: ' + err));
         } catch (err) {

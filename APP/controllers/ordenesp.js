@@ -9,7 +9,7 @@ async function fcnCargarOrdenes(idContainer,status){
                 return `<tr>
                 <td>${rows.CORRELATIVO}
                     <br>
-                    <small><b>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</b></small>
+                    <small>Inicio : <b>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</b></small>
                 </td>
                 <td>${rows.NOPLACA}</td>
                 <td>${rows.DESMARCA}</td>
@@ -37,12 +37,15 @@ async function fcnCargarOrdenes(idContainer,status){
                 return `<tr>
                 <td>${rows.CORRELATIVO}
                 <br>
-                    <small><b>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</b></small>
+                    <small>Inicio : <b>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</b></small>
                 </td>
                 <td>${rows.NOPLACA}</td>
                 <td>${rows.DESMARCA}</td>
                 <td>${rows.COLOR}</td>
-                <td>${rows.NOMCLIENTE}</td>
+                <td>${rows.NOMCLIENTE}
+                <br>
+                <small>Fin : <b>${rows.DIAFIN + '/' + rows.MESFIN + '/' + rows.ANIOFIN}</b></small>
+                </td>
                 <td>${funciones.setMoneda(rows.IMPORTE,'Q ')}</td>
                 <td>
                     <button class="btn btn-sm btn-icon btn-circle btn-primary" data-toggle="modal" data-target="#ModOrdenDetalle" onclick="fcnObtenerDatosOrden(${rows.CORRELATIVO});">
@@ -76,7 +79,8 @@ async function fcnObtenerDatosOrden(correlativo){
     try {
         const response = await fetch(`/carwash/datosorden?token=${GlobalToken}&correlativo=${correlativo}`)
         const json = await response.json();
-                       
+
+                               
         json.recordset.map((rows)=>{
             document.getElementById('txtDataCorrelativo').innerText = 'Detalle de la Orden No. ' + rows.CORRELATIVO;
             document.getElementById('txtDataPlacas').innerHTML = ` <b>${rows.NOPLACA}</b>`;
@@ -85,6 +89,7 @@ async function fcnObtenerDatosOrden(correlativo){
             document.getElementById('txtDataRetoque').innerHTML = ` <b>${rows.RETOQUE}</b>`;
             document.getElementById('txtDataAroma').innerHTML = ` <b>${rows.AROMA}</b>`;
             document.getElementById('txtDataTelefono').innerHTML = `<a href='https://api.whatsapp.com/send?phone=502${rows.TELEFONO}&text=Quick%20Carwash%20'>${rows.TELEFONO}</a>`;
+            document.getElementById('txtDataTipoLavado').innerHTML = `<b>${rows.CARWASH}</b>`
             let strServicios = ''
             if(rows.O1==1){strServicios+='LIMPIEZA DE TAPICERIA, '};if(rows.O2==1){strServicios+='RESTAURACION DE SILVINES, '};
             if(rows.O3==1){strServicios+='RESTAURACION DE PLASTICOS, '};if(rows.O4==1){strServicios+='PULIDO Y LUSTRADO, '};
@@ -108,6 +113,7 @@ async function fcnObtenerDatosOrdenF(correlativo,placa,cliente,importe){
     document.getElementById('txtFEfectivo').value = importe;
     document.getElementById('txtFTarjeta').value = 0;
     document.getElementById('txtFSaldo').innerText = funciones.setMoneda(importe, 'Q ');
+    document.getElementById('txtFObs').value = '';
 
     document.getElementById('btnFinalizarOrden').addEventListener('click',()=>{
         if (document.getElementById('txtFSaldo').innerText == document.getElementById('txtFTotal').innerText){
@@ -140,8 +146,7 @@ function getTotalPagado(efectivo,tarjeta){
 async function fcnFinalizarOrden(correlativo,status){
     let question = '';let url = ''; let labelAviso = '';
     let efect; let tarj;
-    let obs
-
+    let obs; 
     if (status=='P'){
         question = '¿Está seguro que desea Finalizar esta Orden?';
         url = '/carwash/finalizarorden';
@@ -150,6 +155,7 @@ async function fcnFinalizarOrden(correlativo,status){
         efect = Number(document.getElementById('txtFEfectivo').value);
         tarj = Number(document.getElementById('txtFTarjeta').value);
         obs = document.getElementById('txtFObs').value;
+        
     };
     if (status=='F'){
         question = '¿Está seguro que desea Re-Activar esta Orden?';
@@ -182,13 +188,14 @@ async function fcnFinalizarOrden(correlativo,status){
                 
                       await fetch(peticion)
                       
-                      .then(function(res) {
+                      .then(async function(res) {
                         console.log('Estado: ', res.status);
                         if (res.status==200)
                         {   
-                            fcnCargarOrdenes('tblOrdenes',status);
+                            
+                            await fcnCargarOrdenes('tblOrdenes',status);
                             funciones.Aviso(labelAviso);
-                            socket.emit('orden eliminada', correlativo);
+                            
                         }
                       })
                       .catch(
@@ -231,7 +238,7 @@ async function fcnEliminarOrden(correlativo,status){
                     {   
                         fcnCargarOrdenes('tblOrdenes',status);
                         funciones.Aviso(labelAviso);
-                        socket.emit('orden eliminada', correlativo);
+                        socket.emit('orden eliminada', 'No. ' + correlativo);
                     }
                   })
                   .catch(
@@ -242,7 +249,7 @@ async function fcnEliminarOrden(correlativo,status){
             }
         })   
 };
-
+//1
 async function fcnObtenerCorrelativoOrden(idContenedorDestino){
     try {
         const response = await fetch(`/carwash/ordencorrelativo?token=${GlobalToken}`)
@@ -258,7 +265,7 @@ async function fcnObtenerCorrelativoOrden(idContenedorDestino){
         //funciones.AvisoError('No se pudo cargar la lista de Ordenes pendientes');
     }
 
-    fcnObtenerServicios('contenedor1','contenedor2','contenedor3');
+    //fcnObtenerServicios('contenedor1','contenedor2','contenedor3');
     
 };
 
@@ -290,8 +297,8 @@ async function fcnActualizarCorrelativoOrden(correlativo){
             }
         )              
 };
-
-async function fcnObtenerServicios(cont1,cont2){
+//2
+async function fcnObtenerServicios(cont1,cont2,cont3){
     try {
         const response = await fetch(`/carwash/servicios?token=${GlobalToken}`)
         const json = await response.json();
@@ -304,7 +311,7 @@ async function fcnObtenerServicios(cont1,cont2){
                        
         json.recordset.map((rows)=>{
             if(rows.CODCATEGORIA==1){
-                str1 += `<button class='btn btn-round btn-info btn-icon form-control' id='${rows.CODPROD}' onclick="getPrecioServicio(${rows.IMPORTE});">
+                str1 += `<button class='btn btn-round btn-info btn-icon form-control' id='${rows.CODPROD}' onclick="getPrecioServicio(${rows.IMPORTE},${rows.CODPROD});">
                             <li class='fa fa-bell'></li>${rows.DESCRIPCION}
                         </button><br>`;
             };
@@ -340,11 +347,13 @@ async function fcnObtenerServicios(cont1,cont2){
         console.log('Error al cargar los servicios' + error);
     }
 
-    fcnObtenerMarcas('cmbMarca');
+    //fcnObtenerMarcas('cmbMarca');
     
 };
 
-function getPrecioServicio(precio){
+function getPrecioServicio(precio,codprod){
+    GlobalTipoCarwash = codprod;
+    console.log('tipo carwash: ' + GlobalTipoCarwash);
     let total = document.getElementById('txtTotalLavado');
     total.innerText = precio;
     getTotalOrden();
@@ -356,7 +365,7 @@ async function getTotalOrden(){
     let tOtros = Number(document.getElementById('txtTotalOtros').innerText)
     content.innerText = tCarwash + tOtros;
 }
-
+//3
 async function fcnObtenerMarcas(idContainer){
     try {
         const response = await fetch(`/carwash/marcas?token=${GlobalToken}`)
@@ -379,7 +388,7 @@ async function fcnObtenerMarcas(idContainer){
     //fcnObtenerAromas('cmbAroma');
     
 };
-
+//4
 async function fcnObtenerAromas(idContainer){
     try {
         const response = await fetch(`/carwash/aromas?token=${GlobalToken}`)
@@ -418,7 +427,8 @@ async function fcnInsertarOrden(){
                 let colorv = document.getElementById('txtColor').value;
                 let retoque = document.getElementById('cmbRetoque').value;
                 let aroma = document.getElementById('cmbAroma').value;
-                
+
+                let tipocarwash = GlobalTipoCarwash;              
                 let otrolimptapiz; if($('#txtLimpTapiz').prop('checked')==true){otrolimptapiz=1}else{otrolimptapiz=0};
                 let otrorestsilv; if($('#txtRestSilv').prop('checked')==true){otrorestsilv=1}else{otrorestsilv=0};
                 let otrorestplast; if($('#txtRestPlas').prop('checked')==true){otrorestplast=1}else{otrorestplast=0};
@@ -452,7 +462,8 @@ async function fcnInsertarOrden(){
                     o3: otrorestplast,
                     o4: otropulidolustrado,
                     o5: otrolustrmano,
-                    o6: otrolimparos
+                    o6: otrolimparos,
+                    tipocarwash: tipocarwash
                 });
               
                 var peticion = new Request(GlobalServerUrl + '/carwash/nuevaorden', {

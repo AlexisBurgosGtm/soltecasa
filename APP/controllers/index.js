@@ -32,9 +32,11 @@ function InicializarBotonesMenu(){
           funciones.loadView('../views/viewNuevaOrden.html','contenedor')
           .then(()=>{
               funciones.loadScript('../controllers/ordenesp.js','contenedor')
-              .then(()=>{
-                fcnObtenerCorrelativoOrden('txtCorrelativo');
-                
+              .then(async()=>{
+                await fcnObtenerCorrelativoOrden('txtCorrelativo');
+                await fcnObtenerServicios('contenedor1','contenedor2','contenedor3');
+                await fcnObtenerMarcas('cmbMarca');
+                await fcnObtenerAromas('cmbAroma');
                 CargarBotonesNuevaOrden();
             })
               
@@ -101,13 +103,14 @@ socket.on('orden nueva', function(msg){
     } catch (error) {
       console.log('No se logró cargar el listado luego del socket')
     }
-    funciones.NotificacionPersistent(msg);
+    funciones.NotificacionPersistent(msg,"Nueva Orden generada");
 });
 
 socket.on('orden eliminada', function(msg){
   //persistentNotification(msg);
   try {
-    fcnCargarOrdenes('tblOrdenes','P');
+    //fcnCargarOrdenes('tblOrdenes','P');
+    funciones.NotificacionPersistent(msg,'Se eliminó la orden');
   } catch (error) {
     console.log('No se logró cargar el listado luego del socket')
   }

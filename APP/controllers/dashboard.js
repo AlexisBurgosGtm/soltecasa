@@ -1,7 +1,9 @@
+
 try {
     let btnCargarFechaInicio = document.getElementById('btnCargarFechaInicio');
-    btnCargarFechaInicio.addEventListener('click', ()=>{
-        fcnCargarOrdenesFecha('tblOrdenesInicio')
+    btnCargarFechaInicio.addEventListener('click', async ()=>{
+        await fcnCargarOrdenesFecha('tblOrdenesInicio')
+        await getTotalesDia();
     })
     
 } catch (error) {
@@ -56,20 +58,15 @@ async function fcnCargarOrdenesFecha(idContainer){
                 </td>
                 <td>${rows.NOPLACA}</td>
                 <td>${rows.DESMARCA}</td>
-                <td>${rows.COLOR}</td>
                 <td>${rows.NOMCLIENTE}</td>
                 <td>${funciones.setMoneda(rows.IMPORTE,'Q ')}</td>
-                <td>
-                    <button class="btn btn-sm btn-icon btn-circle btn-primary" data-toggle="modal" data-target="#ModOrdenDetalle" onclick="fcnObtenerDatosOrden(${rows.CORRELATIVO});">
-                        <i class="fas fa-fw fa-table"></i>
-                    </button>
-                </td>
+                <td>${rows.OBS}</td>
             </tr>`;                   
        }).join('\n');
 
        document.getElementById(idContainer).innerHTML = tblBody;
 
-       getTotalesDia();
+       //getTotalesDia();
 
     } catch (error) {
         console.log('NO SE LOGRO CARGAR LA LISTA DE ORDENES ' + error);

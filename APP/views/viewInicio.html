@@ -48,8 +48,10 @@
             <div class="col-xl-12 col-lg-12">
               <div class="card shadow mb-4">
                 <!-- Card Header -->
+                <h5>Listado de Órdenes de la fecha seleccionada</h5>
                 <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
-                  <h6 class="m-0 font-weight-bold text-primary">
+                  <div class="row">
+                    <div class="m-0 font-weight-bold text-primary">
                       <div class="input-group">
                         Fecha <input type="date" id="txtFecha" class="form-control">
                         <div class="input-group-append">
@@ -58,8 +60,9 @@
                           </button>
                         </div>
                       </div>
-                  </h6>
-                  <h5>Listado de Órdenes de la fecha seleccionada</h5>
+                    </div>
+                  </div>
+                  
                 </div>
        
                 <!-- Card Body -->
@@ -72,10 +75,9 @@
                             <td>No.</td>
                             <td>Placas</td>
                             <td>Marca</td>
-                            <td>Color</td>
                             <td>Cliente</td>
                             <td>Importe</td>
-                            <td></td>
+                            <td>Notas</td>
                           </tr>
                         </thead>
                         <tbody id="tblOrdenesInicio">
