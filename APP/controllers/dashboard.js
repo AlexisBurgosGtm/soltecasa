@@ -56,10 +56,13 @@ async function fcnCargarOrdenesFecha(idContainer){
                 <br>
                     <small><b>${rows.DIA + '/' + rows.MES + '/' + rows.ANIO}</b></small>
                 </td>
-                <td>${rows.NOPLACA}</td>
-                <td>${rows.DESMARCA}</td>
+                <td>${rows.NOPLACA}
+                <br><small>${rows.DESMARCA}</small>
+                </td>
                 <td>${rows.NOMCLIENTE}</td>
-                <td>${funciones.setMoneda(rows.IMPORTE,'Q ')}</td>
+                <td>${funciones.setMoneda(rows.TOTALTARJETA,'Q ')}</td>
+                <td>${funciones.setMoneda(rows.TOTALEFECTIVO,'Q ')}</td>
+                <td><b>${funciones.setMoneda(rows.IMPORTE,'Q ')}<b></td>
                 <td>${rows.OBS}</td>
             </tr>`;                   
        }).join('\n');
