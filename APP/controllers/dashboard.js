@@ -25,7 +25,8 @@ async function getTotalesDia(){
         json.recordset.map((rows)=>{
             document.getElementById('txtTotalDia').innerText = funciones.setMoneda(rows.IMPORTE, 'Q ');
             document.getElementById('txtTotalOrdenes').innerText = rows.CONTEO;
-            
+            document.getElementById('txtTotalTarjeta').innerText = funciones.setMoneda(rows.TARJETA, 'Q ');
+            document.getElementById('txtTotalEfectivo').innerText = funciones.setMoneda(rows.EFECTIVO, 'Q ');
             //document.getElementById('txtTotalOrdenes').innerText = rows.CONTEO;
        }).join('\n');
      
