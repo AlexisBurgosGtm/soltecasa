@@ -458,4 +458,20 @@ router.get("/aromas", async(req,res)=>{
 	sql.close()
 });
 
+router.get("/aromas2", async(req,res)=>{
+	const sql = require('mssql')
+	let token = req.query.token;
+	try {sql.close()} catch (error) {};
+			const pool = await new sql.connect(config)		
+			try {
+				const result = await sql.query `SELECT DESCRIPCION FROM CW_AROMAS`
+				console.dir('Enviando aromas..');
+				res.send(result);
+			} catch (err) {
+				console.log(String(err));
+			}
+	sql.close()
+});
+
+
 module.exports = router;
