@@ -2,12 +2,12 @@ var express = require("express");
 var app = express();
 var router = express.Router();
 var bodyParser = require('body-parser');
-var routercarwash = require('./router/routercarwash');
+//var routercarwash = require('./router/routercarwash');
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
 
-const PORT = process.env.PORT || 666;
+const PORT = process.env.PORT || 9999;
 
 app.use(bodyParser.json());
 
@@ -38,7 +38,7 @@ app.get("/",function(req,res){
 }); 
 
 //Router para el carwash
-app.use('/carwash', routercarwash);
+//app.use('/carwash', routercarwash);
 
 app.use("/",router);
 
@@ -70,17 +70,31 @@ http.listen(PORT, function(){
 });
 
 
-/*CODIGO PARA EL HTML Y SOCKET
-   $(function () {
-        var socket = io();
-        $('form').submit(function(){
-          socket.emit('chat message', $('#m').val());
-          $('#m').val('');
-          return false;
-        });
-        socket.on('chat message', function(msg){
-          $('#messages').append($('<li>').text(msg));
-          window.scrollTo(0, document.body.scrollHeight);
-        });
-      });
-*/
+function executeQuery(res,sqlqry){
+  const sql = require('mssql')
+  //console.log('ejecutando... ' + sqlqry);
+  
+  try {
+    const pool1 = new sql.ConnectionPool(config, err => {
+      pool1.request() // or: new sql.Request(pool1)
+      .query(sqlqry, (err, result) => {
+          if(err) throw err;
+            res.send(result);
+      })  
+    })
+    pool1.on('error', err => {
+        console.log('error sql = ' + err);
+    })
+  } catch (error) {
+    res.send('Error al ejecutar la consulta: ' + error)   
+  }
+};
+
+
+// manejador de rutas
+
+app.get("/ordenespendientes",function(req,res){
+  //res.sendFile(path + 'index.html');
+  
+  
+}); 

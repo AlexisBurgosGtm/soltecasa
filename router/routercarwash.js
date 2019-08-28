@@ -1,58 +1,59 @@
 const express = require('express');
 const router = express.Router();
 
-const config = {user: 'DB_A45479_EXPRESS_admin',password: 'razors1805',server: 'sql7002.site4now.net',database: 'DB_A45479_EXPRESS',pool: {	max: 100,	min: 0,	idleTimeoutMillis: 30000}};
-//const config = {user: 'iEx', password: 'iEx', server: 'SERVERALEXIS\\SQLEXPRESS', database: 'CARWASH', pool: {max: 100,min: 0,idleTimeoutMillis: 30000}};
+//const config = {user: 'DB_A45479_EXPRESS_admin',password: 'razors1805',server: 'sql7002.site4now.net',database: 'DB_A45479_EXPRESS',pool: {	max: 100,	min: 0,	idleTimeoutMillis: 30000}};
+const config = {user: 'iEx', password: 'iEx', server: 'SERVERALEXIS\\SQLEXPRESS', database: 'CARWASH', pool: {max: 100,min: 0,idleTimeoutMillis: 30000}};
 
 //const sqlString = 'mssql://' + config.user + ':' + config.password + '@' + config.server + '/' + config.database;
 
-// OBTIENE EL TOTAL DE VENTAS DEL DIA
-router.get("/totaldia", async(req,res)=>{
+let executeQuery = (res, qry)=>{
 	const sql = require('mssql')
+ 
+	const pool = new sql.ConnectionPool(config, err => {
+		// ... error checks
+	 		// Query
+	 
+		pool.request() // or: new sql.Request(pool1)
+		.query(qry, (err, result) => {
+			// ... error checks
+	 
+			res.send(result)
+		})
+	 
+	})
+	 
+	pool.on('error', err => {
+		// ... error handler
+		res.send(err)
+	})
+
+}
+
+// OBTIENE EL TOTAL DE VENTAS DEL DIA
+router.get("/rptinforme", async(req,res)=>{
+	let noOrden = req.query.orden;
+
+	let qr = `SELECT Ordenes_trabajo_Det.Identificacion, Ordenes_trabajo_Det.Fecha_Rotura, Ordenes_trabajo_Res.CodClientePrin, Ordenes_trabajo_Res.Proyecto, Ordenes_trabajo_Res.Direccion_Proyecto, Ordenes_trabajo_Res.Contacto, Ordenes_trabajo_Det.No_orden, Ordenes_trabajo_Det.Laboratorista, Ordenes_trabajo_Det.Colocacion, Ordenes_trabajo_Det.Fecha_Manufactura, Ordenes_trabajo_Det.[#Guia], Ordenes_trabajo_Det.Resistencia_Req, Ordenes_trabajo_Det.Vol_M3, Ordenes_trabajo_Det.Hora_Inicio, Ordenes_trabajo_Det.Hora_final, Ordenes_trabajo_Det.[Slump(plg)], Ordenes_trabajo_Det.[Peso_Planta(kg/m3)], Ordenes_trabajo_Det.[Temperatura_Concreto(Cent)], Ordenes_trabajo_Det.[%Aire], Ordenes_trabajo_Det.[Peso_Unitario(kg/m3)], Ordenes_trabajo_Det.[Temperatura_Ambiente(Cent)], Ordenes_trabajo_Det.Hora_Hechura, Ordenes_trabajo_Det.Rendimiento, Ordenes_trabajo_Det.[Peso(Kg)], Ordenes_trabajo_Det.[Diametro(cm)], Ordenes_trabajo_Det.[Carga_Soportada(kN)], Ordenes_trabajo_Det.Tipo_Rotura, Ordenes_trabajo_Res.Firma1, Ordenes_trabajo_Res.Firma2, Ordenes_trabajo_Det.LaboratoristaEnsayo, Ordenes_trabajo_Det.Elemento, Ordenes_trabajo_Det.[Edad_rotura(dias)], Clientes.Nombre AS Cliente, Ordenes_trabajo_Det.Area, Ordenes_trabajo_Det.AreaTag, [Carga_Soportada(kN)]*10/([Diametro(cm)]*[Diametro(cm)]*Pi()/4) AS [Resistencia a la Compre], [resistencia a la compre]*145.0377 AS EquivalenciaPsi, Ordenes_trabajo_Det.TipoCostoCilindro, Costo_Cilindro.TipoCilindro
+			FROM ((Ordenes_trabajo_Res INNER JOIN Ordenes_trabajo_Det ON Ordenes_trabajo_Res.No_orden = Ordenes_trabajo_Det.No_orden) LEFT JOIN Clientes ON Ordenes_trabajo_Res.CodClientePrin = Clientes.[Codigo/Nit]) LEFT JOIN Costo_Cilindro ON Ordenes_trabajo_Det.TipoCostoCilindro = Costo_Cilindro.IdCosto
+			GROUP BY Ordenes_trabajo_Det.Identificacion, Ordenes_trabajo_Det.Fecha_Rotura, Ordenes_trabajo_Res.CodClientePrin, Ordenes_trabajo_Res.Proyecto, Ordenes_trabajo_Res.Direccion_Proyecto, Ordenes_trabajo_Res.Contacto, Ordenes_trabajo_Det.No_orden, Ordenes_trabajo_Det.Laboratorista, Ordenes_trabajo_Det.Colocacion, Ordenes_trabajo_Det.Fecha_Manufactura, Ordenes_trabajo_Det.[#Guia], Ordenes_trabajo_Det.Resistencia_Req, Ordenes_trabajo_Det.Vol_M3, Ordenes_trabajo_Det.Hora_Inicio, Ordenes_trabajo_Det.Hora_final, Ordenes_trabajo_Det.[Slump(plg)], Ordenes_trabajo_Det.[Peso_Planta(kg/m3)], Ordenes_trabajo_Det.[Temperatura_Concreto(Cent)], Ordenes_trabajo_Det.[%Aire], Ordenes_trabajo_Det.[Peso_Unitario(kg/m3)], Ordenes_trabajo_Det.[Temperatura_Ambiente(Cent)], Ordenes_trabajo_Det.Hora_Hechura, Ordenes_trabajo_Det.Rendimiento, Ordenes_trabajo_Det.[Peso(Kg)], Ordenes_trabajo_Det.[Diametro(cm)], Ordenes_trabajo_Det.[Carga_Soportada(kN)], Ordenes_trabajo_Det.Tipo_Rotura, Ordenes_trabajo_Res.Firma1, Ordenes_trabajo_Res.Firma2, Ordenes_trabajo_Det.LaboratoristaEnsayo, Ordenes_trabajo_Det.Elemento, Ordenes_trabajo_Det.[Edad_rotura(dias)], Clientes.Nombre, Ordenes_trabajo_Det.Area, Ordenes_trabajo_Det.AreaTag, Ordenes_trabajo_Det.TipoCostoCilindro, Costo_Cilindro.TipoCilindro
+			HAVING (((Ordenes_trabajo_Det.No_orden)=${noOrden}))`
 	
-	let _dia = parseInt(req.query.dia) + 1;
-	let _mes = req.query.mes;
-	let _anio = req.query.anio;
-	let token = req.query.token;
+	executeQuery(res,qr);
 
-	try {sql.close()} catch (error) {};
-
-	const pool = await sql.connect(config)		
-		try {
-			const result = await sql.query `SELECT COUNT(CORRELATIVO) AS CONTEO, SUM(IMPORTE) AS IMPORTE, SUM(TOTALTARJETA) AS TARJETA, SUM(TOTALEFECTIVO) AS EFECTIVO
-											FROM CW_ORDERS
-											WHERE (STATUS = 'F') AND (ANIOFIN = ${_anio}) AND (MESFIN = ${_mes}) AND (DIAFIN = ${_dia})`
-				console.dir('Enviando total dia');
-				res.send(result);
-			} catch (err) {
-				console.log(String(err));
-			}
-			sql.close()
 });
 // OBTIENE TODAS LAS ORDENES PENDIENTES
 router.get("/ordenespendientes", async(req,res)=>{
-	const sql = require('mssql')
+	
 	let token = req.query.token;
 	let st = req.query.st;
 
-	try {
-		sql.close()
-	} catch (error) {
-		
-	}
-			const pool = await new sql.connect(config)		
-			try {
-				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CLIENTES.TELEFONO, CW_ORDERS.NOMCLIENTE, CW_ORDERS.IMPORTE, CW_ORDERS.ANIO, CW_ORDERS.MES, CW_ORDERS.DIA, CW_ORDERS.O1, CW_ORDERS.O2, CW_ORDERS.O3, CW_ORDERS.O4, CW_ORDERS.O5, CW_ORDERS.O6,
-												CW_ORDERS.ANIOFIN,CW_ORDERS.MESFIN,CW_ORDERS.DIAFIN
-												FROM CW_MARCAS RIGHT OUTER JOIN CW_CLIENTES ON CW_MARCAS.CODMARCA = CW_CLIENTES.CODMARCA RIGHT OUTER JOIN
-												CW_ORDERS ON CW_CLIENTES.NOPLACA = CW_ORDERS.NOPLACA LEFT OUTER JOIN CW_CATEGORIAS ON CW_ORDERS.CODCATEGORIA = CW_CATEGORIAS.CODCATEGORIA
-												WHERE (CW_ORDERS.STATUS = ${st})`
-				console.dir('Enviando ordenes pendientes');
-				res.send(result);
-			} catch (err) {
-				console.log(String(err));
-			}
-			sql.close()
+	let qr= `SELECT Ordenes_trabajo_Res.Id, Ordenes_trabajo_Res.No_orden, Ordenes_trabajo_Res.Fecha, Clientes.Nombre AS Cliente, Ordenes_trabajo_Res.Terminada AS Fin, Ordenes_trabajo_Res.Anio, Ordenes_trabajo_Res.Mes, Ordenes_trabajo_Res.Impreso
+				FROM Ordenes_trabajo_Res LEFT JOIN Clientes ON Ordenes_trabajo_Res.CodClientePrin = Clientes.[Codigo/Nit]
+				GROUP BY Ordenes_trabajo_Res.Id, Ordenes_trabajo_Res.No_orden, Ordenes_trabajo_Res.Fecha, Clientes.Nombre, Ordenes_trabajo_Res.Terminada, Ordenes_trabajo_Res.Anio, Ordenes_trabajo_Res.Mes, Ordenes_trabajo_Res.Impreso
+				HAVING Clientes.Nombre=${cliente} ORDER BY Ordenes_trabajo_Res.No_orden DESC`
+				
+	executeQuery(res,qr);
+
 });
 // OBTIENE TODAS LAS ORDENES FINALIZADAS DE UNA FECHA
 router.get("/ordenesfecha", async(req,res)=>{
@@ -63,23 +64,11 @@ router.get("/ordenesfecha", async(req,res)=>{
 	let _mes = parseInt(req.query.mes);
 	let _dia = parseInt(req.query.dia) + 1;
 
-	try {
-		sql.close()
-	} catch (error) {
-		
-	}
-			const pool = await new sql.connect(config)		
-			try {
-				const result = await sql.query `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CLIENTES.TELEFONO, CW_ORDERS.NOMCLIENTE, CW_ORDERS.IMPORTE, CW_ORDERS.ANIO, CW_ORDERS.MES, CW_ORDERS.DIA, CW_ORDERS.O1, CW_ORDERS.O2, CW_ORDERS.O3, CW_ORDERS.O4, CW_ORDERS.O5, CW_ORDERS.O6,CW_ORDERS.OBS, CW_ORDERS.TOTALTARJETA, CW_ORDERS.TOTALEFECTIVO
+let qr = `SELECT CW_ORDERS.CORRELATIVO, CW_ORDERS.NOPLACA, CW_MARCAS.DESMARCA, CW_CLIENTES.COLOR, CW_CLIENTES.TELEFONO, CW_ORDERS.NOMCLIENTE, CW_ORDERS.IMPORTE, CW_ORDERS.ANIO, CW_ORDERS.MES, CW_ORDERS.DIA, CW_ORDERS.O1, CW_ORDERS.O2, CW_ORDERS.O3, CW_ORDERS.O4, CW_ORDERS.O5, CW_ORDERS.O6,CW_ORDERS.OBS, CW_ORDERS.TOTALTARJETA, CW_ORDERS.TOTALEFECTIVO
 												FROM CW_MARCAS RIGHT OUTER JOIN CW_CLIENTES ON CW_MARCAS.CODMARCA = CW_CLIENTES.CODMARCA RIGHT OUTER JOIN
 												CW_ORDERS ON CW_CLIENTES.NOPLACA = CW_ORDERS.NOPLACA LEFT OUTER JOIN CW_CATEGORIAS ON CW_ORDERS.CODCATEGORIA = CW_CATEGORIAS.CODCATEGORIA
 												WHERE (CW_ORDERS.ANIOFIN = ${_anio}) AND (CW_ORDERS.MESFIN = ${_mes}) AND (CW_ORDERS.DIAFIN = ${_dia}) AND (CW_ORDERS.STATUS = 'F')`
-				console.dir('Enviando ordenes de fecha ' + _dia + '/' + _mes + '/' + _anio);
-				res.send(result);
-			} catch (err) {
-				console.log(String(err));
-			}
-			sql.close()
+	executeQuery(res,qr);
 });
 // OBTIENE EL DETALLE DE LA ORDEN
 router.get("/datosorden", async(req,res)=>{

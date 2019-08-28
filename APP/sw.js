@@ -1,4 +1,4 @@
-var CACHE = 'carwash';
+var CACHE = 'solteca';
 const staticAssets = [
   './',
   './manifest.json',
@@ -26,27 +26,20 @@ self.addEventListener('install', function(evt) {
 });
 
 self.addEventListener('fetch', function(evt) {
-  //const destination = evt.request.destination;
-  //console.log('destination: ' + destination.toString());
-
-  /*
-  var req = evt.request.clone();
-  if (req.clone().method == "GET") {
-    //console.log('El service worker está cargando el caché');
-    evt.respondWith(fromCache(evt.request));
-    evt.waitUntil(update(evt.request));
+  if (navigator.onLine){
+    var req = evt.request.clone();
+    if (req.clone().method == "GET") {
+      //evt.respondWith(fromCache(evt.request));
+      evt.waitUntil(update(evt.request));
+    }
+  }else{
+    var req = evt.request.clone();
+    if (req.clone().method == "GET") {
+      evt.respondWith(fromCache(evt.request));
+      //evt.waitUntil(update(evt.request));
+    }
   }
-    */
 });
-
-/*
-self.addEventListener('fetch', function(evt) {
-    console.log('El service worker está cargando el caché');
-    evt.respondWith(fromCache(evt.request));
-    evt.waitUntil(update(evt.request));
-   
-});
-*/
 
 function fromCache(request) {
   return caches.open(CACHE).then(function (cache) {
