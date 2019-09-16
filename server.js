@@ -2,7 +2,8 @@ var express = require("express");
 var app = express();
 var router = express.Router();
 var bodyParser = require('body-parser');
-//var routercarwash = require('./router/routercarwash');
+var routerRpt = require('./router/routerRpt');
+var routerUsers = require('./router/routerUsers');
 
 var http = require('http').Server(app);
 var io = require('socket.io')(http);
@@ -37,8 +38,11 @@ app.get("/",function(req,res){
 	res.sendFile(path + 'index.html');
 }); 
 
-//Router para el carwash
-//app.use('/carwash', routercarwash);
+//Router para reportes
+app.use('/reports', routerRpt);
+//Router para usuarios
+app.use('/usuarios', routerUsers);
+
 
 app.use("/",router);
 
@@ -48,11 +52,6 @@ app.use("*",function(req,res){
 });
 
 /*
-app.listen(PORT, function () {
-	console.log('Servidor iniciado en el puerto ' + String(PORT));
-});
-*/
-
 io.on('connection', function(socket){
 	socket.on('orden nueva', function(msg,user){
 	  io.emit('orden nueva', msg, user);
@@ -64,37 +63,9 @@ io.on('connection', function(socket){
 	  io.emit('orden finalizada', msg, user);
   });
 });
+*/
 
 http.listen(PORT, function(){
   console.log('listening on *:' + PORT);
 });
 
-
-function executeQuery(res,sqlqry){
-  const sql = require('mssql')
-  //console.log('ejecutando... ' + sqlqry);
-  
-  try {
-    const pool1 = new sql.ConnectionPool(config, err => {
-      pool1.request() // or: new sql.Request(pool1)
-      .query(sqlqry, (err, result) => {
-          if(err) throw err;
-            res.send(result);
-      })  
-    })
-    pool1.on('error', err => {
-        console.log('error sql = ' + err);
-    })
-  } catch (error) {
-    res.send('Error al ejecutar la consulta: ' + error)   
-  }
-};
-
-
-// manejador de rutas
-
-app.get("/ordenespendientes",function(req,res){
-  //res.sendFile(path + 'index.html');
-  
-  
-}); 

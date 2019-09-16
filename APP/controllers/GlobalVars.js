@@ -1,4 +1,6 @@
 let GlobalToken = '';
-let GlobalServerUrl ='';
-let GlobalCorrelativo = 0;
-let GlobalTipoCarwash = 0;
+let GlobalUser = '';
+let GlobalCodCliente = '';
+let GlobalCliente = '';
+
+let GlobalSelectedNoOrden = '';
