@@ -6,9 +6,7 @@ const execute = require('./connection');
 router.get("/rptinforme", async(req,res)=>{
 	let noOrden = req.query.orden;
   
-  console.log('ejecutando informe ' & noOrden);
-
-	let qr = `SELECT Ordenes_trabajo_Det.Identificacion as IDENTIFICACION, Ordenes_trabajo_Det.Fecha_Rotura AS ROTURA, Ordenes_trabajo_Res.CodClientePrin AS CODCLIENTE, Ordenes_trabajo_Res.Proyecto, Ordenes_trabajo_Res.Direccion_Proyecto AS DIRECCION, Ordenes_trabajo_Res.Contacto, Ordenes_trabajo_Det.No_orden AS NOORDEN, Ordenes_trabajo_Det.Laboratorista, Ordenes_trabajo_Det.Colocacion, Ordenes_trabajo_Det.Fecha_Manufactura AS MANUFACTURA, Ordenes_trabajo_Det.[#Guia] AS GUIA, Ordenes_trabajo_Det.Resistencia_Req AS RESISTENCIAR, Ordenes_trabajo_Det.Vol_M3 AS VOLUMEN, Ordenes_trabajo_Det.Hora_Inicio AS HINICIO, Ordenes_trabajo_Det.Hora_final AS HFINAL, Ordenes_trabajo_Det.[Slump(plg)] AS PLG, Ordenes_trabajo_Det.[Peso_Planta(kg/m3)] AS PESOPLANTA, Ordenes_trabajo_Det.[Temperatura_Concreto(Cent)] AS TEMPERATURA, Ordenes_trabajo_Det.[%Aire] AS AIRE, Ordenes_trabajo_Det.[Peso_Unitario(kg/m3)] AS PESOUNITARIO, Ordenes_trabajo_Det.[Temperatura_Ambiente(Cent)] AS TEMPERATURAAMBIENTE, Ordenes_trabajo_Det.Hora_Hechura AS HORAHECHURA, Ordenes_trabajo_Det.Rendimiento, Ordenes_trabajo_Det.[Peso(Kg)] AS PESOKG, Ordenes_trabajo_Det.[Diametro(cm)] AS DIAMETRO, Ordenes_trabajo_Det.[Carga_Soportada(kN)] AS CARGASOPORTADA, Ordenes_trabajo_Det.Tipo_Rotura AS TIPOROTURA, Ordenes_trabajo_Res.Firma1, Ordenes_trabajo_Res.Firma2, Ordenes_trabajo_Det.LaboratoristaEnsayo, Ordenes_trabajo_Det.Elemento, Ordenes_trabajo_Det.[Edad_rotura(dias)] EDADROTURA, Clientes.Nombre AS Cliente, Ordenes_trabajo_Det.Area, Ordenes_trabajo_Det.AreaTag, ([Carga_Soportada(kN)]*10/([Diametro(cm)]*[Diametro(cm)]*Pi()/4)) AS RESISTENCIACOMPRESION, ([Carga_Soportada(kN)]*10/([Diametro(cm)]*[Diametro(cm)]*Pi()/4))*145.0377 AS EquivalenciaPsi, Ordenes_trabajo_Det.TipoCostoCilindro, Costo_Cilindro.TipoCilindro
+  let qr = `SELECT Ordenes_trabajo_Det.Identificacion as IDENTIFICACION, Ordenes_trabajo_Det.Fecha_Rotura AS ROTURA, Ordenes_trabajo_Res.CodClientePrin AS CODCLIENTE, Ordenes_trabajo_Res.Proyecto, Ordenes_trabajo_Res.Direccion_Proyecto AS DIRECCION, Ordenes_trabajo_Res.Contacto, Ordenes_trabajo_Det.No_orden AS NOORDEN, Ordenes_trabajo_Det.Laboratorista, Ordenes_trabajo_Det.Colocacion, Ordenes_trabajo_Det.Fecha_Manufactura AS MANUFACTURA, Ordenes_trabajo_Det.[#Guia] AS GUIA, Ordenes_trabajo_Det.Resistencia_Req AS RESISTENCIAR, Ordenes_trabajo_Det.Vol_M3 AS VOLUMEN, Ordenes_trabajo_Det.Hora_Inicio AS HINICIO, Ordenes_trabajo_Det.Hora_final AS HFINAL, Ordenes_trabajo_Det.[Slump(plg)] AS PLG, Ordenes_trabajo_Det.[Peso_Planta(kg/m3)] AS PESOPLANTA, Ordenes_trabajo_Det.[Temperatura_Concreto(Cent)] AS TEMPERATURA, Ordenes_trabajo_Det.[%Aire] AS AIRE, Ordenes_trabajo_Det.[Peso_Unitario(kg/m3)] AS PESOUNITARIO, Ordenes_trabajo_Det.[Temperatura_Ambiente(Cent)] AS TEMPERATURAAMBIENTE, Ordenes_trabajo_Det.Hora_Hechura AS HORAHECHURA, Ordenes_trabajo_Det.Rendimiento, Ordenes_trabajo_Det.[Peso(Kg)] AS PESOKG, Ordenes_trabajo_Det.[Diametro(cm)] AS DIAMETRO, Ordenes_trabajo_Det.[Carga_Soportada(kN)] AS CARGASOPORTADA, Ordenes_trabajo_Det.Tipo_Rotura AS TIPOROTURA, Ordenes_trabajo_Res.Firma1, Ordenes_trabajo_Res.Firma2, Ordenes_trabajo_Det.LaboratoristaEnsayo, Ordenes_trabajo_Det.Elemento, Ordenes_trabajo_Det.[Edad_rotura(dias)] EDADROTURA, Clientes.Nombre AS Cliente, Ordenes_trabajo_Det.Area, Ordenes_trabajo_Det.AreaTag, ([Carga_Soportada(kN)]*10/([Diametro(cm)]*[Diametro(cm)]*Pi()/4)) AS RESISTENCIACOMPRESION, ([Carga_Soportada(kN)]*10/([Diametro(cm)]*[Diametro(cm)]*Pi()/4))*145.0377 AS EquivalenciaPsi, Ordenes_trabajo_Det.TipoCostoCilindro, Costo_Cilindro.TipoCilindro
   FROM ((Ordenes_trabajo_Res INNER JOIN Ordenes_trabajo_Det ON Ordenes_trabajo_Res.No_orden = Ordenes_trabajo_Det.No_orden) LEFT JOIN Clientes ON Ordenes_trabajo_Res.CodClientePrin = Clientes.[Codigo/Nit]) LEFT JOIN Costo_Cilindro ON Ordenes_trabajo_Det.TipoCostoCilindro = Costo_Cilindro.IdCosto
   GROUP BY Ordenes_trabajo_Det.Identificacion, Ordenes_trabajo_Det.Fecha_Rotura, Ordenes_trabajo_Res.CodClientePrin, Ordenes_trabajo_Res.Proyecto, Ordenes_trabajo_Res.Direccion_Proyecto, Ordenes_trabajo_Res.Contacto, Ordenes_trabajo_Det.No_orden, Ordenes_trabajo_Det.Laboratorista, Ordenes_trabajo_Det.Colocacion, Ordenes_trabajo_Det.Fecha_Manufactura, Ordenes_trabajo_Det.[#Guia], Ordenes_trabajo_Det.Resistencia_Req, Ordenes_trabajo_Det.Vol_M3, Ordenes_trabajo_Det.Hora_Inicio, Ordenes_trabajo_Det.Hora_final, Ordenes_trabajo_Det.[Slump(plg)], Ordenes_trabajo_Det.[Peso_Planta(kg/m3)], Ordenes_trabajo_Det.[Temperatura_Concreto(Cent)], Ordenes_trabajo_Det.[%Aire], Ordenes_trabajo_Det.[Peso_Unitario(kg/m3)], Ordenes_trabajo_Det.[Temperatura_Ambiente(Cent)], Ordenes_trabajo_Det.Hora_Hechura, Ordenes_trabajo_Det.Rendimiento, Ordenes_trabajo_Det.[Peso(Kg)], Ordenes_trabajo_Det.[Diametro(cm)], Ordenes_trabajo_Det.[Carga_Soportada(kN)], Ordenes_trabajo_Det.Tipo_Rotura, Ordenes_trabajo_Res.Firma1, Ordenes_trabajo_Res.Firma2, Ordenes_trabajo_Det.LaboratoristaEnsayo, Ordenes_trabajo_Det.Elemento, Ordenes_trabajo_Det.[Edad_rotura(dias)], Clientes.Nombre, Ordenes_trabajo_Det.Area, Ordenes_trabajo_Det.AreaTag, Ordenes_trabajo_Det.TipoCostoCilindro, Costo_Cilindro.TipoCilindro
   HAVING (Ordenes_trabajo_Det.No_orden='${noOrden}')`
@@ -29,14 +27,44 @@ router.get("/ordenesmes", async(req,res)=>{
 
 });
 
+////////////////////////////////////////////////////////////////////
+// DATOS PARA EL INFORME DE ORDEN DE TRABAJO ///////////////////////
+////////////////////////////////////////////////////////////////////
 router.get("/elementosorden", async(req,res)=>{
   const orden = req.query.orden;
 
-  let qry = `SELECT IDENTIFICACION,FECHA_MANUFACTURA AS MANUFACTURA,FECHA_ROTURA AS ROTURA,ELEMENTO, [Edad_rotura(dias)] AS EDAD FROM Ordenes_trabajo_Det WHERE NO_ORDEN='${orden}' ORDER BY IDENTIFICACION`
-  console.log(qry);
+  let qry = `SELECT IDENTIFICACION,FECHA_MANUFACTURA AS MANUFACTURA,FECHA_ROTURA AS ROTURA,ELEMENTO, [Edad_rotura(dias)] AS EDAD, Resistencia_Req AS RESISTENCIAREQ, [Slump(plg)] AS PLG, [Temperatura_Concreto(Cent)] AS TEMPERATURACONCRETO, [#Guia] AS GUIA, AREATAG, TIPOCOSTOCILINDRO FROM Ordenes_trabajo_Det WHERE NO_ORDEN='${orden}' ORDER BY IDENTIFICACION`
   execute.Query(res,qry);
 
 });
 
+router.get("/clienteorden", async(req,res)=>{
+  const orden = req.query.orden;
+
+  let qry = `SELECT Ordenes_trabajo_Res.Fecha, Clientes.Nombre AS CLIENTE, Ordenes_trabajo_Res.Proyecto AS PROYECTO, Ordenes_trabajo_Res.Direccion_Proyecto AS DIRPROYECTO, Ordenes_trabajo_Res.Contacto 
+            FROM Ordenes_trabajo_Res LEFT OUTER JOIN Clientes ON Ordenes_trabajo_Res.CodClientePrin = Clientes.[Codigo/Nit]
+            WHERE (Ordenes_trabajo_Res.No_orden = '${orden}')`
+            
+  execute.Query(res,qry);
+
+});
+
+router.get("/promediosalcanzados", async(req,res)=>{
+  const orden = req.query.orden;
+
+  let qry = `SELECT No_orden AS ORDEN, [Edad_rotura(dias)] AS EDAD, Fecha_Rotura AS FECHA, 
+            ROUND((AVG([Carga_Soportada(kN)]) * 10) / (AVG([Diametro(cm)]) * AVG([Diametro(cm)]) * 3.1416 / 4),2) AS RESISTENCIAMPA,
+            ROUND((AVG([Carga_Soportada(kN)]) * 10) / (AVG([Diametro(cm)]) * AVG([Diametro(cm)]) * 3.1416 / 4)*145.0377,0) AS EQUIVALENCIAPSI,
+            ROUND(((([Carga_Soportada(kN)]*10/([Diametro(cm)]*[Diametro(cm)]*Pi()/4))*145.0377)/[Resistencia_Req])*100,2) AS ALCANZADO
+            FROM Ordenes_trabajo_Det
+            GROUP BY [Edad_rotura(dias)], Fecha_Rotura, [Peso(Kg)], [Diametro(cm)], Area, Resistencia_Req,[Carga_Soportada(kN)], No_orden
+            HAVING (No_orden = N'${orden}')`
+            
+  execute.Query(res,qry);
+
+});
+
+////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////
 
 module.exports = router;

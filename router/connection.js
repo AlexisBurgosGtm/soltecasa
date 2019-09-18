@@ -15,7 +15,6 @@ let execute = {
 				if(err){
 					res.send(err.message)
 				}else{
-					console.log(result);
 					res.send(result);
 				}
 					

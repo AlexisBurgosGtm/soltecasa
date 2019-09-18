@@ -61,8 +61,11 @@ socket.on('orden nueva', function(msg){
 
 InicializarBotonesMenu();
 
-
+// carga la ventana del informe
 async function fcnCargarInforme(noOrden){
+  
+  GlobalSelectedNoOrden = noOrden;
+  
   funciones.loadView('./views/informe/viewInforme.html','contenedor')
   .then(()=>{
     funciones.loadScript('./views/informe/controller.js','contenedor')

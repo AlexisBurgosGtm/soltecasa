@@ -22,13 +22,13 @@
 
     <div class="row" id="rowLogo">
         <div class="col-5">
-            <img src="../favicon.png" width="50" height="50">
+            <img src="../img/logo.png" width="100" height="50">
         </div>
 
         <div class="col-6" align="center">
-            <label>Orden de Trabajo:</label><label class="text-danger"><b>1312</b></label>
+            <label>Orden de Trabajo:</label><label class="text-danger" id="lbNoOrden"><b>00</b></label>
             <br>
-            <label>Fecha de toma de muestra :</label><label><b>24/06/2019</b></label>
+            <label>Fecha de toma de muestra :</label><label id="lbFecha"><b>01/01/2000</b></label>
         </div>
     </div>
 
@@ -46,61 +46,86 @@
 
     <div class="row" id="rowDatosCliente">
         <div class="col-3">
-            <label class="text-bold text-italic">Información del Cliente</label>            
+            <h4 class="">Información del Cliente</h4>            
             <br>
-            <label class="text-bold">Cliente:</label>
+            <label class=""><b>Cliente:</b></label>
             <br>
-            <label class="text-bold">Proyecto:</label>
+            <label class=""><b>Proyecto:</b></label>
             <br>
-            <label class="text-bold">Dirección del Proyecto:</label>
+            <label class=""><b>Dirección del Proyecto:</b></label>
             <br>
-            <label class="text-bold">Atención a:</label>
+            <label class=""><b>Atención a:</b></label>
             <br>
-            <label class="text-bold">Área TAG:</label>
+            <label class=""><b>Área TAG:</b></label>
             <br>
-            <label class="text-bold">Manufactura:</label>
+            <label class=""><b>Manufactura:</b></label>
         </div>
         <div class="col-9">
-                <label class="text-bold text-italic"> </label>            
+                <h4 class=""> </h4>            
                 <br>
-                <label class="text-bold">Acabados Constructivos S.A.</label>
+                <label class="" id="lbNomCliente">---</label>
                 <br>
-                <label class="text-bold">Museo Miraflores</label>
+                <label class="" id="lbProyecto">---</label>
                 <br>
-                <label class="text-bold">Ciudad</label>
+                <label class="" id="lbDirProyecto">---</label>
                 <br>
-                <label class="text-bold">SN</label>
+                <label class="" id="lbAtencion">---</label>
                 <br>
-                <label class="text-bold">Área TAG</label>
+                <label class="" id="lbTag">---</label>
                 <br>
-                <label class="text-bold">Manufactura</label>
+                <label class="" id="lbManufactura">---</label>
         </div>
     </div>
 
     <div class="row" id="rowElementos">
-        <div class="table-responsive">
-            <table class="table table-border">
-                <thead>
-                    <b>
-                    <tr>
-                        <td>Identificación</td>
-                        <td>Elemento</td>
-                        <td>Tipo de Concreto</td>
-                        <td>Temperatura Concreto (°C)</td>
-                        <td>Asentamiento (plg)</td>
-                        <td>Edad(días)</td>
-                        <td>#Guía/Camión</td>
-                    </tr>
-                    </b>
-                </thead>
-                <tbody id="tblElementos">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+                            <td><b>Identificación</b></td>
+                            <td><b>Elemento</b></td>
+                            <td><b>Tipo de Concreto</b></td>
+                            <td><b>Temperatura Concreto (°C)</b></td>
+                            <td><b>Asentamiento (plg)</b></td>
+                            <td><b>Edad(días)</b></td>
+                            <td><b>#Guía/Camión</b></td>
+                        </tr>
+                    </thead>
+                    <tbody id="tblElementos">
 
-                </tbody>
-            </table>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <div class="row" id="rowGrafica"> 
+    <div class="row" id="rowGraficas"> 
+
+        <div class="col-7">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped">
+                    <thead>
+                        <tr>
+                            <td>Edad (días)</td>
+                            <td>Fecha Rotura</td>
+                            <td>Resistencia a la Compresión (Mpa)</td>
+                            <td>Equivalencia a psi</td>
+                            <td>Alcanzado</td>
+                        </tr>
+                    </thead>
+                    <tbody id="tblPromedios">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-5">
+            <div class="card">
+                <div id="flot-bar" style="width:100%; height:300px;"></div>
+            </div>
+        </div>
 
     </div>
 

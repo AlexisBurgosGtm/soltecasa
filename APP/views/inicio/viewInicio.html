@@ -3,13 +3,13 @@
            <!-- cards con totales -->
         <div class="row">
             
-            <div class="col-xl-6 col-md-6 mb-4">
+            <div class="col-xl-5 col-md-5 mb-4">
               <div class="card border-left-warning shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-warning text-uppercase mb-1">Ordenes Pendientes</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><label id="txtTotalPendientes">0</label></div>
+                      <div class="h3 mb-0 font-weight-bold text-gray-800"><label id="txtTotalPendientes">0</label></div>
                     </div>
                     <div class="col-auto">
                       <i class="fal fa-globe"></i>
@@ -20,13 +20,13 @@
             </div>
 
             
-            <div class="col-xl-6 col-md-6 mb-4">
+            <div class="col-xl-5 col-md-5 mb-4">
               <div class="card border-left-info shadow h-100 py-2">
                 <div class="card-body">
                   <div class="row no-gutters align-items-center">
                     <div class="col mr-2">
                       <div class="text-xs font-weight-bold text-info text-uppercase mb-1">Órdenes Terminadas</div>
-                      <div class="h5 mb-0 font-weight-bold text-gray-800"><label id="txtTotalTerminadas">0</label></div>
+                      <div class="h3 mb-0 font-weight-bold text-gray-800"><label id="txtTotalTerminadas">0</label></div>
                     </div>
                     <div class="col-auto">
                       <i class="fal fa-cube"></i>
@@ -150,6 +150,7 @@
                                       <td>Rotura</td>
                                       <td>Edad Rotura</td>
                                       <td>Elemento</td>
+                                      <td>Resistencia<br>Requerida</td>
                                     </tr>
                                   </thead>
                                   <tbody id="tblDetalle">
@@ -178,5 +179,11 @@
 
                       </div>
                   </div>
+
+          
               </div>
+        </div>
+
+        <div id="fixed-btn2">
+            <button class="btn btn-success btn-circle btn-xl" id="btnNuevaOrden" onclick="funciones.Aviso('Próximamente usted podrá enviarnos su Órden de trabajo Directamente');">+</button>
         </div>

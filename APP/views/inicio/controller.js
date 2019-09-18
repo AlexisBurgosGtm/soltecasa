@@ -51,11 +51,11 @@ async function getOrdenesCliente(){
                 totalTerminadas+=1
             }
             let fi = new Date(rows.FECHA); let a = fi.getFullYear(); let m = fi.getMonth()+1; let d = fi.getUTCDate();
-            let ff = d.toString() + '/' + m.toString() + '/' + a.toString();
+            let ff = d.toString() + '/' + m.toString() + '/' + a.toString(); //esta se pondría en la segunda row
 
             return `<tr>
                         <td>${rows.ORDEN}</td>
-                        <td>${ff}</td>
+                        <td>${rows.FECHA.replace('T00:00:00.000Z','')}</td>
                         <td>${rows.PROYECTO}</td>
                         <td>${rows.ST}</td>
                         <td>
@@ -99,10 +99,11 @@ async function fcnGetDetalle(noOrden){
 
             return `<tr>
                         <td>${rows.IDENTIFICACION}</td>
-                        <td>${rows.MANUFACTURA}</td>
-                        <td>${rows.ROTURA}</td>
+                        <td>${rows.MANUFACTURA.replace('T00:00:00.000Z','')}</td>
+                        <td>${rows.ROTURA.replace('T00:00:00.000Z','')}</td>
                         <td>${rows.EDAD}</td>
                         <td>${rows.ELEMENTO}</td>
+                        <td>${rows.RESISTENCIAREQ}</td>
                     </tr>`
        }).join('\n');
 

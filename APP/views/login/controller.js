@@ -1,10 +1,10 @@
 function InicializarLogin(){
-
+    funciones.loadCss('./css/page-login.css','contenedor');
     btnIniciar.addEventListener('click',()=>{
         fcnLogin('txtUsuario','txtPass')
     })
 
-    funciones.loadCss('./css/page-login.css','contenedor')
+    
 
 }
 
@@ -34,8 +34,11 @@ async function fcnLogin(idUser,idPass){
 }
 
 async function fcnIniciar(){
+    
     funciones.loadView('../views/inicio/viewInicio.html','contenedor')
     .then(()=>{
+        // carga los estilos de la vista
+        
         funciones.loadScript('./views/inicio/controller.js','contenedor')
         .then(()=>{
             InicializarInicio();

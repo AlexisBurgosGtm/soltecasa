@@ -16,8 +16,8 @@
         <link rel="stylesheet" media="screen, print" href="css/vendors.bundle.css">
         <link rel="stylesheet" media="screen, print" href="css/app.bundle.css">
         <!-- Place favicon.ico in the root directory -->
-        <link rel="apple-touch-icon" sizes="180x180" href="img/favicon/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="img/favicon/favicon-32x32.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="./favicon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
         <link rel="mask-icon" href="img/favicon/safari-pinned-tab.svg" color="#5bbad5">
         <link rel="stylesheet" media="screen, print" href="css/.../styles.css">
         <link rel="stylesheet" media="screen, print" href="./css/btn.css">
@@ -25,7 +25,8 @@
 	<!-- service worker -->
 	<meta name="application-name" content="Solteca-Online" />
 	<meta name="theme-color" content="#ffffff">
-     	<link rel="manifest" href="manifest.json">
+    <link rel="manifest" href="manifest.json">
+    
     </head>
     <body class="mod-bg-2 nav-function-top header-function-fixed nav-function-fixed">
         <!-- DOC: script to save and load page settings -->
@@ -112,8 +113,8 @@
                         <!-- we need this logo when user switches to nav-function-top -->
                         <div class="page-logo">
                             <a href="#" class="page-logo-link press-scale-down d-flex align-items-center">
-                                <!--<img src="img/logo.jpg" alt="" aria-roledescription="logo">-->
-                                <span class="page-logo-text mr-1">Solteca-Online</span>
+                                <img src="img/logo.png" alt="" aria-roledescription="logo">
+                                <span class="page-logo-text mr-1"></span>
                                 <i class="fal fa-angle-down d-inline-block ml-1 fs-lg color-primary-300"></i>
                             </a>
                         </div>
@@ -183,7 +184,7 @@
                     <!-- BEGIN Page Footer -->
                     <footer class="page-footer" role="contentinfo">
                         <div class="d-flex align-items-center flex-1 text-muted">
-                            <span class="hidden-md-down fw-700">por Alexis Burgos</span>
+                            <span class="hidden-md-down fw-700">por <a href="https://api.whatsapp.com/send?phone=50257255092&text=Hola,%20me%20interesa%20este%20sistema%20Solteca-Online" target="blank">Alexis Burgos</a></span>
                         </div>
                     </footer>
                     <!-- END Page Footer -->
@@ -387,6 +388,7 @@
         <script src="js/vendors.bundle.js"></script>
         <script src="js/app.bundle.js"></script>
         <script src="js/../script.js"></script>
+        <script src="./libs/flot.bundle.js"></script>
 
 
         <script src="./libs/socket.io.js"></script>
