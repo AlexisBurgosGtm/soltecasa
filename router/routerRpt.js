@@ -33,7 +33,7 @@ router.get("/ordenesmes", async(req,res)=>{
 router.get("/elementosorden", async(req,res)=>{
   const orden = req.query.orden;
 
-  let qry = `SELECT IDENTIFICACION,FECHA_MANUFACTURA AS MANUFACTURA,FECHA_ROTURA AS ROTURA,ELEMENTO, [Edad_rotura(dias)] AS EDAD, Resistencia_Req AS RESISTENCIAREQ, [Slump(plg)] AS PLG, [Temperatura_Concreto(Cent)] AS TEMPERATURACONCRETO, [#Guia] AS GUIA, AREATAG, TIPOCOSTOCILINDRO FROM Ordenes_trabajo_Det WHERE NO_ORDEN='${orden}' ORDER BY IDENTIFICACION`
+  let qry = `SELECT IDENTIFICACION,FECHA_MANUFACTURA AS MANUFACTURA,FECHA_ROTURA AS ROTURA,ELEMENTO, [Edad_rotura(dias)] AS EDAD, Resistencia_Req AS RESISTENCIAREQ, [Slump(plg)] AS PLG, [Temperatura_Concreto(Cent)] AS TEMPERATURACONCRETO, ISNULL([#Guia],0) AS GUIA, ISNULL(AREATAG,0) AS AREATAG, TIPOCOSTOCILINDRO FROM Ordenes_trabajo_Det WHERE NO_ORDEN='${orden}' ORDER BY IDENTIFICACION`
   execute.Query(res,qry);
 
 });
@@ -41,7 +41,7 @@ router.get("/elementosorden", async(req,res)=>{
 router.get("/clienteorden", async(req,res)=>{
   const orden = req.query.orden;
 
-  let qry = `SELECT Ordenes_trabajo_Res.Fecha, Clientes.Nombre AS CLIENTE, Ordenes_trabajo_Res.Proyecto AS PROYECTO, Ordenes_trabajo_Res.Direccion_Proyecto AS DIRPROYECTO, Ordenes_trabajo_Res.Contacto 
+  let qry = `SELECT Ordenes_trabajo_Res.Fecha AS FECHA, Clientes.Nombre AS CLIENTE, Ordenes_trabajo_Res.Proyecto AS PROYECTO, ISNULL(Ordenes_trabajo_Res.Direccion_Proyecto,'SN') AS DIRPROYECTO, ISNULL(Ordenes_trabajo_Res.Contacto, 'SN') AS CONTACTO 
             FROM Ordenes_trabajo_Res LEFT OUTER JOIN Clientes ON Ordenes_trabajo_Res.CodClientePrin = Clientes.[Codigo/Nit]
             WHERE (Ordenes_trabajo_Res.No_orden = '${orden}')`
             
@@ -52,12 +52,12 @@ router.get("/clienteorden", async(req,res)=>{
 router.get("/promediosalcanzados", async(req,res)=>{
   const orden = req.query.orden;
 
-  let qry = `SELECT No_orden AS ORDEN, [Edad_rotura(dias)] AS EDAD, Fecha_Rotura AS FECHA, 
-            ROUND((AVG([Carga_Soportada(kN)]) * 10) / (AVG([Diametro(cm)]) * AVG([Diametro(cm)]) * 3.1416 / 4),2) AS RESISTENCIAMPA,
-            ROUND((AVG([Carga_Soportada(kN)]) * 10) / (AVG([Diametro(cm)]) * AVG([Diametro(cm)]) * 3.1416 / 4)*145.0377,0) AS EQUIVALENCIAPSI,
-            ROUND(((([Carga_Soportada(kN)]*10/([Diametro(cm)]*[Diametro(cm)]*Pi()/4))*145.0377)/[Resistencia_Req])*100,2) AS ALCANZADO
-            FROM Ordenes_trabajo_Det
-            GROUP BY [Edad_rotura(dias)], Fecha_Rotura, [Peso(Kg)], [Diametro(cm)], Area, Resistencia_Req,[Carga_Soportada(kN)], No_orden
+  let qry = `SELECT  No_orden AS ORDEN, Fecha_Manufactura AS FECHA, [Edad_rotura(dias)] AS EDAD, 
+  ROUND((AVG([Carga_Soportada(kN)]) * 10) / (AVG([Diametro(cm)]) * AVG([Diametro(cm)]) * 3.1416 / 4),2) AS RESISTENCIAMPA,
+  ROUND((AVG([Carga_Soportada(kN)]) * 10) / (AVG([Diametro(cm)]) * AVG([Diametro(cm)]) * 3.1416 / 4)*145.0377,0) AS EQUIVALENCIAPSI,
+  ROUND((((AVG([Carga_Soportada(kN)])*10/(AVG([Diametro(cm)])*AVG([Diametro(cm)])*Pi()/4))*145.0377)/AVG([Resistencia_Req]))*100,2) AS ALCANZADO
+FROM            Ordenes_trabajo_Det
+GROUP BY No_orden, Fecha_Manufactura, [Edad_rotura(dias)]
             HAVING (No_orden = N'${orden}')`
             
   execute.Query(res,qry);

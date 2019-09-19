@@ -185,5 +185,40 @@
         </div>
 
         <div id="fixed-btn2">
-            <button class="btn btn-success btn-circle btn-xl" id="btnNuevaOrden" onclick="funciones.Aviso('Próximamente usted podrá enviarnos su Órden de trabajo Directamente');">+</button>
+            <button class="btn btn-success btn-circle btn-xl" id="btnNuevaOrden">+</button>
         </div>
+
+        <div class="modal fade" id="ModalOrden" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+          <div class="modal-dialog modal-lg" role="document">
+              <div class="modal-content">
+                  <div class="modal-header bg-successs">
+                    <label class="modal-title text-danger h3">Nueva Orden de Trabajo</label>
+                  </div>
+                  <div class="modal-body">
+                      <div class="col-12">
+                        <img src="./img/logo.png">
+                        <br>
+                        <hr class="sidebar-divider">
+                        <br>
+                        <span>Próximamente usted podrá enviarnos su órden de trabajo.... </span>                          
+  
+                      </div>
+                  </div>
+  
+                  <div class="modal-footer">
+
+                      <button type="button" class="btn bg-info btn-round btn-lg text-white" id="btnDetCerrar" data-dismiss="modal">
+                        X Cerrar
+                      </button>
+
+                      <button type="button" class="btn bg-danger btn-round btn-lg text-white" id="btnDetPrint" data-dismiss="modal">
+                          <i class="fal fa-check"></i>   
+                          Enviar
+                      </button>
+
+                  </div>
+              </div>
+
+      
+          </div>
+    </div>

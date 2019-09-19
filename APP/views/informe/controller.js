@@ -20,7 +20,7 @@ async function fcnGetInforme(noOrden){
         const response = await fetch(`/reports/clienteorden?orden=${noOrden}`)
         const json = await response.json();
         json.recordset.map((rows)=>{
-            document.getElementById('lbFecha').innerHTML = `<b>${rows.FECHA}</b>`
+            document.getElementById('lbFecha').innerHTML = `<b>${rows.FECHA.replace('T00:00:00.000Z','')}</b>`
             document.getElementById('lbNomCliente').innerText = rows.CLIENTE
             document.getElementById('lbProyecto').innerText = rows.PROYECTO
             document.getElementById('lbDirProyecto').innerText = rows.DIRPROYECTO
@@ -30,9 +30,7 @@ async function fcnGetInforme(noOrden){
        
     } catch (error) {
         console.log(error)
-       //funciones.AvisoError('No se pudo cargar la lista de Elementos disponibles')
     };
-
 
     // SOLICITANDO LA TABLA DE ELEMENTOS
     try {
@@ -66,79 +64,71 @@ async function fcnGetInforme(noOrden){
 
     } catch (error) {
         console.log(error)
-       //funciones.AvisoError('No se pudo cargar la lista de Elementos disponibles')
     };
 
-        // SOLICITANDO LA TABLA DE PROMEDIOS
-        try {
+    // SOLICITANDO LA TABLA DE PROMEDIOS
+    let labels = [];
+    let dataset = [];
+    try {
             const response = await fetch(`/reports/promediosalcanzados?orden=${noOrden}`)
             const json = await response.json();
             let strPromedios = json.recordset.map((rows)=>{
+                
+                let resist =rows.RESISTENCIAMPA; if (rows.RESISTENCIAMPA==null){resist = 0};
+                let equival =rows.EQUIVALENCIAPSI; if (rows.EQUIVALENCIAPSI==null){equival = 0};
+                let alcan =rows.ALCANZADO; if (rows.ALCANZADO==null){alcan = 0};
+                labels.push(rows.EDAD.toString());
+                dataset.push(alcan);
+
                 return `<tr>
                 <td>${rows.EDAD}</td>
                 <td>${rows.FECHA.replace('T00:00:00.000Z','')}</td>
-                <td>${rows.RESISTENCIAMPA}</td>
-                <td>${rows.EQUIVALENCIAPSI}</td>
-                <td>${rows.ALCANZADO}</td>
+                <td>${resist}</td>
+                <td>${equival}</td>
+                <td>${alcan} %</td>
             </tr>`
     
            }).join('\n');
           
             document.getElementById('tblPromedios').innerHTML = strPromedios;
     
-        } catch (error) {
+    } catch (error) {
             console.log(error)
-           //funciones.AvisoError('No se pudo cargar la lista de Elementos disponibles')
-        };
+    };
+    
+    // CARGANDO DATOS DE LA GRAFICA
+    var data = {
+            labels: labels,
+            datasets: [{
+              label: '% alcanzado',
+              data: dataset,
+              backgroundColor: 'rgba(54, 162, 235, 0.2)',
+              borderColor: 'rgba(54, 162, 235, 1)',
+              borderWidth: 1,
+              fill: false
+            }]
+          };
 
-        let data =            {
-            data: [
-                [3, 82.07],
-                [7, 91.98],
-                [28, 75],
-                [56, 126.6]
-            ]
-        }
-
-        // gráfico de comparación de promedios
-        var flotBar = $.plot("#flot-bar", [
-            data
-        ],
-            {
-                series:
-                {
-                    bars:
-                    {
-                        show: true,
-                        lineWidth: 10,
-                        fillColor: myapp_get_color.fusion_200
-                    }
-                },
-                grid:
-                {
-                    borderWidth: 1,
-                    borderColor: '#eee'
-                },
-                yaxis:
-                {
-                    tickColor: '#eee',
-                    font:
-                    {
-                        color: '#999',
-                        size: 10
-                    }
-                },
-                xaxis:
-                {
-                    tickColor: '#eee',
-                    font:
-                    {
-                        color: '#999',
-                        size: 10
-                    }
+    var options = {
+            scales: {
+              yAxes: [{
+                ticks: {
+                  beginAtZero: true
                 }
-            });
+              }]
+            },
+            legend: {
+              display: false
+            },
+            elements: {
+              point: {
+                radius: 0
+              }
+            }
+    };
 
+    var barChartCanvas = $("#barChart").get(0).getContext("2d");
+    var barChart = new Chart(barChartCanvas, {type: 'bar', data: data, options: options});
 }
 
 

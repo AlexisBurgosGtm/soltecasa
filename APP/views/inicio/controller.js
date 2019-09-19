@@ -26,6 +26,11 @@ function InicializarInicio(){
         fcnCargarInforme(GlobalSelectedNoOrden);
     })
 
+    // listener del botón Nuevo
+    document.getElementById('btnNuevaOrden').addEventListener('click',()=>{
+        $('#ModalOrden').modal('show');
+    })
+
     //cargar datos
     getOrdenesCliente();
     

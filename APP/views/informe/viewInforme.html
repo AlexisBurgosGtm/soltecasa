@@ -1,18 +1,25 @@
-<div class="oculto-impresion">
+﻿<div class="oculto-impresion">
     <div class="row">
         <div class="col-3">
-            <button class="btn btn-primary" id="btnAtras">
+            <button class="btn btn-primary waves-effect" id="btnAtras">
                 <i class="fal fa-arrow-left"></i>   
                 Atrás
             </button>
         </div>
         
         <div class="col-3">
-            <button class="btn btn-danger" id="btnImprimir">
+            <button class="btn btn-danger waves-effect" id="btnImprimir">
                 <i class="fal fa-print"></i>   
                 Imprimir
             </button>
-        </div>        
+        </div>
+        
+        <div class="col-3">
+            <button class="btn btn-success waves-effect" id="btnImprimir">
+                <i class="fal fa-download"></i>   
+                Generar PDF
+            </button>
+        </div>  
     </div>
 </div>
 
@@ -22,13 +29,13 @@
 
     <div class="row" id="rowLogo">
         <div class="col-5">
-            <img src="../img/logo.png" width="100" height="50">
+            <img src="../img/logo.png">
         </div>
 
         <div class="col-6" align="center">
             <label>Orden de Trabajo:</label><label class="text-danger" id="lbNoOrden"><b>00</b></label>
             <br>
-            <label>Fecha de toma de muestra :</label><label id="lbFecha"><b>01/01/2000</b></label>
+            <label>Fecha de toma de muestra :</label><label id="lbFecha"></label>
         </div>
     </div>
 
@@ -61,7 +68,7 @@
             <label class=""><b>Manufactura:</b></label>
         </div>
         <div class="col-9">
-                <h4 class=""> </h4>            
+                <h4 class="">   </h4>            
                 <br>
                 <label class="" id="lbNomCliente">---</label>
                 <br>
@@ -81,7 +88,7 @@
         <div class="col-12">
             <div class="table-responsive">
                 <table class="table table-bordered table-hover">
-                    <thead>
+                    <thead class="">
                         <tr>
                             <td><b>Identificación</b></td>
                             <td><b>Elemento</b></td>
@@ -102,10 +109,10 @@
 
     <div class="row" id="rowGraficas"> 
 
-        <div class="col-7">
+        <div class="col-md-7 col-lg-7 col-sm-12 col-xl-7">
             <div class="table-responsive">
-                <table class="table table-bordered table-striped">
-                    <thead>
+                <table class="table table-bordered table-striped" style="font-size: small">
+                    <thead class="bg-gray-900 text-white">
                         <tr>
                             <td>Edad (días)</td>
                             <td>Fecha Rotura</td>
@@ -121,16 +128,35 @@
             </div>
         </div>
 
-        <div class="col-5">
+        <div class="col-md-5 col-sm-12 col-lg-5 col-xl-5">
             <div class="card">
-                <div id="flot-bar" style="width:100%; height:300px;"></div>
+              <div class="card-body">
+                <canvas id="barChart"></canvas>
+              </div>
             </div>
-        </div>
+          </div>
 
     </div>
 
     <div class="row" id="rowFirma">
-        <div class="container my-auto">
+        <!-- SE OCULTA EN LA IMPRESION -->
+        <div class="container my-auto oculto-impresion">
+            <div class="copyright text-center my-auto">
+                <br><br><br>
+                <label>Ing. Victor Sánchez</label>
+                <br>
+                <label><b>Jefe de Sección de Concretos</b></label>
+                <br><br>
+                <small><b>28 avenida 7-25 zona 4, Mixco, Bosques de San Nicolás</b></small>
+                <br>
+                <small><b>www.soltecasa.com</b></small>
+                <br>
+                <small><b>Teléfono (502)2436-0471 / email: info.soltecasa@gmail.com</b></small>
+            </div>
+        </div>
+
+        <!-- INVISIBLE EN DISEÑO PERO VISIBLE EN IMPRESION-->
+        <div class="container my-auto divFooter">
             <div class="copyright text-center my-auto">
                 <label>_________________________________________</label>            
                 <br>
