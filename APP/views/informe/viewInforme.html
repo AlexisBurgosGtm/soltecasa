@@ -15,9 +15,9 @@
         </div>
         
         <div class="col-3">
-            <button class="btn btn-success waves-effect" id="btnImprimir">
+            <button class="btn btn-success waves-effect" id="btnExportar">
                 <i class="fal fa-download"></i>   
-                Generar PDF
+                Generar-PDF
             </button>
         </div>  
     </div>
@@ -50,8 +50,167 @@
             <h6><b>Informe de Orden de Trabajo</b></h6>
         </div>
     </div>
+    <!-- DATOS DEL CLIENTE -->
+    <div class="row">
+        <h4 class="">    Información del Cliente</h4>            
+    </div>
 
-    <div class="row" id="rowDatosCliente">
+    <div class="row">
+        <div class="col-3">
+            <label class=""><b>Cliente:</b></label>
+        </div>
+        <div class="col-9">
+            <label class="" id="lbNomCliente">---</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-3">
+            <label class=""><b>Proyecto:</b></label>
+        </div>
+        <div class="col-9">
+            <label class="" id="lbProyecto">---</label>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-3">
+                <label class=""><b>Dirección del Proyecto:</b></label>
+        </div>
+        <div class="col-9">
+                <label class="" id="lbDirProyecto">---</label>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-3">
+                <label class=""><b>Atención a:</b></label>
+        </div>
+        <div class="col-9">
+                <label class="" id="lbAtencion">---</label>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-3">
+                <label class=""><b>Área TAG:</b></label>
+        </div>
+        <div class="col-9">
+                <label class="" id="lbTag">---</label>
+        </div>
+    </div>
+
+    <div class="row">                    
+        <div class="col-3">         
+            <label class=""><b>Manufactura:</b></label>                        
+        </div>        
+        <div class="col-9">
+            <label class="" id="lbManufactura">---</label>
+        </div>
+    </div>
+    <!-- FIN DATA CLIENTES -->
+
+    <div class="row" id="rowElementos">
+        <div class="col-12">
+            <div class="table-responsive">
+                <table class="table table-bordered table-hover">
+                    <thead class="">
+                        <tr>
+                            <td><b>Identificación</b></td>
+                            <td><b>Elemento</b></td>
+                            <td><b>Tipo de Concreto</b></td>
+                            <td><b>Temperatura Concreto (°C)</b></td>
+                            <td><b>Asentamiento (plg)</b></td>
+                            <td><b>Edad(días)</b></td>
+                            <td><b>#Guía/Camión</b></td>
+                        </tr>
+                    </thead>
+                    <tbody id="tblElementos">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row" id="rowGraficas"> 
+
+        <div class="col-7">
+            <div class="table-responsive">
+                <table class="table table-bordered table-striped" style="font-size: small">
+                    <thead class="bg-gray-900 text-white">
+                        <tr>
+                            <td>Edad (días)</td>
+                            <td>Fecha Rotura</td>
+                            <td>Resistencia a la Compresión (Mpa)</td>
+                            <td>Equivalencia a psi</td>
+                            <td>Alcanzado</td>
+                        </tr>
+                    </thead>
+                    <tbody id="tblPromedios">
+
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="col-5">
+            <div class="card">
+              <div class="card-body">
+                <canvas id="barChart"></canvas>
+              </div>
+            </div>
+          </div>
+
+    </div>
+
+    <div class="row" id="rowFirma">
+        <!-- SE OCULTA EN LA IMPRESION -->
+        <div class="container my-auto oculto-impresion foot">
+            <div class="copyright text-center my-auto">
+                <br><br><br><br><br><br><br><br><br><br>
+                <img src="./img/firma.png" width="320" height="120">
+                
+                <br><br>
+                <small><b>28 avenida 7-25 zona 4, Mixco, Bosques de San Nicolás</b></small>
+                <br>
+                <small><b>www.soltecasa.com</b></small>
+                <br>
+                <small><b>Teléfono (502)2436-0471 / email: info.soltecasa@gmail.com</b></small>
+            </div>
+        </div>
+
+        <!-- INVISIBLE EN DISEÑO PERO VISIBLE EN IMPRESION-->
+        <div class="container my-auto divFooter">
+            <div class="copyright text-center my-auto">
+                <label>____________________________________________</label>            
+                <br>
+                <label>Ing. Victor Sánchez</label>
+                <br>
+                <label><b>Jefe de Sección de Concretos</b></label>
+                <br>
+                <br>
+                <small><b>
+                    28 avenida 7-25 zona 4, Mixco, Bosques de San Nicolás
+                </b></small>
+                <br>
+                <small><b>
+                    www.soltecasa.com
+                </b></small>
+                <br>
+                <small><b>
+                    Teléfono (502)2436-0471 / email: info.soltecasa@gmail.com
+                </b></small>
+            </div>
+        </div>
+    </div>
+
+
+</div>
+
+<!--
+
+     <div class="row" id="rowDatosCliente">
         <div class="col-3">
             <h4 class="">Información del Cliente</h4>            
             <br>
@@ -84,101 +243,5 @@
         </div>
     </div>
 
-    <div class="row" id="rowElementos">
-        <div class="col-12">
-            <div class="table-responsive">
-                <table class="table table-bordered table-hover">
-                    <thead class="">
-                        <tr>
-                            <td><b>Identificación</b></td>
-                            <td><b>Elemento</b></td>
-                            <td><b>Tipo de Concreto</b></td>
-                            <td><b>Temperatura Concreto (°C)</b></td>
-                            <td><b>Asentamiento (plg)</b></td>
-                            <td><b>Edad(días)</b></td>
-                            <td><b>#Guía/Camión</b></td>
-                        </tr>
-                    </thead>
-                    <tbody id="tblElementos">
 
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
-    <div class="row" id="rowGraficas"> 
-
-        <div class="col-md-7 col-lg-7 col-sm-12 col-xl-7">
-            <div class="table-responsive">
-                <table class="table table-bordered table-striped" style="font-size: small">
-                    <thead class="bg-gray-900 text-white">
-                        <tr>
-                            <td>Edad (días)</td>
-                            <td>Fecha Rotura</td>
-                            <td>Resistencia a la Compresión (Mpa)</td>
-                            <td>Equivalencia a psi</td>
-                            <td>Alcanzado</td>
-                        </tr>
-                    </thead>
-                    <tbody id="tblPromedios">
-
-                    </tbody>
-                </table>
-            </div>
-        </div>
-
-        <div class="col-md-5 col-sm-12 col-lg-5 col-xl-5">
-            <div class="card">
-              <div class="card-body">
-                <canvas id="barChart"></canvas>
-              </div>
-            </div>
-          </div>
-
-    </div>
-
-    <div class="row" id="rowFirma">
-        <!-- SE OCULTA EN LA IMPRESION -->
-        <div class="container my-auto oculto-impresion">
-            <div class="copyright text-center my-auto">
-                <br><br><br>
-                <label>Ing. Victor Sánchez</label>
-                <br>
-                <label><b>Jefe de Sección de Concretos</b></label>
-                <br><br>
-                <small><b>28 avenida 7-25 zona 4, Mixco, Bosques de San Nicolás</b></small>
-                <br>
-                <small><b>www.soltecasa.com</b></small>
-                <br>
-                <small><b>Teléfono (502)2436-0471 / email: info.soltecasa@gmail.com</b></small>
-            </div>
-        </div>
-
-        <!-- INVISIBLE EN DISEÑO PERO VISIBLE EN IMPRESION-->
-        <div class="container my-auto divFooter">
-            <div class="copyright text-center my-auto">
-                <label>_________________________________________</label>            
-                <br>
-                <label>Ing. Victor Sánchez</label>
-                <br>
-                <label><b>Jefe de Sección de Concretos</b></label>
-                <br>
-                <br>
-                <small><b>
-                    28 avenida 7-25 zona 4, Mixco, Bosques de San Nicolás
-                </b></small>
-                <br>
-                <small><b>
-                    www.soltecasa.com
-                </b></small>
-                <br>
-                <small><b>
-                    Teléfono (502)2436-0471 / email: info.soltecasa@gmail.com
-                </b></small>
-            </div>
-        </div>
-    </div>
-
-
-</div>
+-->

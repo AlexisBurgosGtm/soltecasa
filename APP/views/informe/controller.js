@@ -5,8 +5,39 @@ function InitializeInforme(){
     document.getElementById('btnImprimir').addEventListener('click',()=>{
         window.print();
     })
+    
+    
+ document.getElementById('btnExportar').addEventListener('click',async()=>{
+  
+  await funciones.Aviso('Generando PDF...');
+  
+  await html2canvas(document.getElementById('rptContainer')).then(function(canvas) {
+    //document.getElementById('editor').appendChild(canvas);
+    var strname = `SOLTECA Orden No ${GlobalSelectedNoOrden}.pdf`;
+
+    var doc = new jsPDF();
+    var img = canvas.toDataURL("image/png");
+    doc.addImage(img,'JPEG',10, 10, 192, 200);
+    doc.save(strname);
+  });
+ })
 
     fcnGetInforme(GlobalSelectedNoOrden);
+}
+
+function genPDF()
+{
+ html2canvas(document.body,{
+ onrendered:function(canvas){
+
+ var img=canvas.toDataURL("image/png");
+ var doc = new jsPDF();
+ doc.addImage(img,'JPEG',20,20);
+ doc.save('test.pdf');
+ }
+
+ });
+
 }
 
 async function fcnGetInforme(noOrden){

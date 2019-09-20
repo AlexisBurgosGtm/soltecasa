@@ -1,8 +1,8 @@
 {
   "name": "Solteca-Online",
   "short_name": "Solteca-Online",
-  "theme_color": "#a04592",
-  "background_color": "#00f2c3",
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
   "display": "standalone",
   "orientation": "portrait",
   "Scope": "/",

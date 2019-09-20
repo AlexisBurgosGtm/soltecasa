@@ -17,6 +17,10 @@
     }
 }
 
+.foot {
+    bottom: 0;
+}
+
 /* BOTON FLOTANTE ESQUINA DERECHA */
 #fixed-btn2 { 
 position: fixed;
