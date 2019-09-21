@@ -18,7 +18,6 @@ router.get("/rptinforme", async(req,res)=>{
 });
 
 // OBTIENE LAS ORDENES DE UN CLIENTE ESPECIFICO
-
 router.get("/ordenesmes", async(req,res)=>{
   const {codcliente,anio,mes} = req.query;
 
@@ -26,6 +25,18 @@ router.get("/ordenesmes", async(req,res)=>{
   execute.Query(res,qry);
 
 });
+// OBTIENE LOS PROYECTOS DE UN CLIENTE Y MES
+router.get("/proyectosordenesmes", async(req,res)=>{
+  const {codcliente,anio,mes} = req.query;
+
+  let qry = `SELECT Proyecto AS PROYECTO FROM Ordenes_trabajo_Res
+            WHERE (CodClientePrin = '${codcliente}') AND (Anio = ${anio}) AND (Mes = ${mes})
+            GROUP BY Proyecto`;
+  execute.Query(res,qry);
+
+});
+
+
 
 ////////////////////////////////////////////////////////////////////
 // DATOS PARA EL INFORME DE ORDEN DE TRABAJO ///////////////////////

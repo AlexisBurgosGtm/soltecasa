@@ -16,13 +16,13 @@ async function fcnLogin(idUser,idPass){
         const response = await fetch(`/usuarios/login?usuario=${usuario}&pass=${pass}`)
         const json = await response.json();
                        
-        json.recordset.map((rows)=>{
-            console.log(rows.toString());
+        json.recordset.map(async (rows)=>{
+           
             if (rows.USUARIO==usuario){
                 GlobalUser = rows.USUARIO;
                 GlobalCliente = rows.NOMBRE;
                 GlobalCodCliente = rows.CODCLIENTE;
-                fcnIniciar();
+                await fcnIniciar();
             }else{
                 funciones.AvisoError('Usuario y/o contraseña no existen');
             }

@@ -17,9 +17,24 @@ function InicializarInicio(){
         getOrdenesCliente();    
     })
 
+    // LISTENER DE LAS BUSQUEDAS
+    /*
     document.getElementById('txtBuscar').addEventListener('keyup',()=>{
         funciones.crearBusquedaTabla('tblListado','txtBuscar');
     });
+    */
+
+   document.getElementById('cmbProyectos').addEventListener('change',()=>{
+    funciones.crearBusquedaTabla('tblListado','cmbProyectos');
+       /*
+       if(this.value=='Todos...'){
+            funciones.crearBusquedaTabla('tblListado','txtBuscar');
+       }else{
+            funciones.crearBusquedaTabla('tblListado','txtBuscar');
+       }
+        */
+    });
+   
 
     // asigna el listener el botón imprimir en ordeness
     document.getElementById('btnDetPrint').addEventListener('click',()=>{
@@ -57,7 +72,7 @@ async function getOrdenesCliente(){
             }
             let fi = new Date(rows.FECHA); let a = fi.getFullYear(); let m = fi.getMonth()+1; let d = fi.getUTCDate();
             let ff = d.toString() + '/' + m.toString() + '/' + a.toString(); //esta se pondría en la segunda row
-
+           
             return `<tr>
                         <td>${rows.ORDEN}</td>
                         <td>${rows.FECHA.replace('T00:00:00.000Z','')}</td>
@@ -81,11 +96,22 @@ async function getOrdenesCliente(){
        document.getElementById('txtTotalTerminadas').innerText =totalTerminadas;
 
     } catch (error) {
-        tbl.innerHTML = 'Error al cargar datos...'
+        tbl.innerHTML = '<h1 class="text-danger">No se pudo obtener la lista de órdenes...</h1>'
         document.getElementById('txtTotalPendientes').innerText =0;
        document.getElementById('txtTotalTerminadas').innerText =0;
     }
 
+    try {
+        const response = await fetch(`/reports/proyectosordenesmes?codcliente=${GlobalCodCliente}&anio=${anio}&mes=${mes}`)
+        const json = await response.json();       
+        let strP = json.recordset.map((rows)=>{
+            return `<option value=${rows.PROYECTO}>${rows.PROYECTO}</option>`            
+       }).join('\n');
+
+       document.getElementById('cmbProyectos').innerHTML = '<option value="">Todos los proyectos...</option>' + strP;
+    } catch (error) {
+       document.getElementById('cmbProyectos').innerHTML = '';
+    }
 };
 
 async function fcnGetDetalle(noOrden){
